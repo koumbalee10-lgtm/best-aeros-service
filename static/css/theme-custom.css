@@ -1,0 +1,20 @@
+:root {
+  --bleu: #0F172A;
+  --bleu-profond: #06101E;
+  --bleu-clair: #1E3A8A;
+  --ambre: #D97706;
+  --ambre-fonce: #B45309;
+  --ambre-clair: #FEF3C7;
+  --vert: #059669;
+  --vert-fond: #D1FAE5;
+  --fond-site: #F8FAFC;
+  --texte-principal: #0F172A;
+  --texte-secondaire: #475569;
+  --texte-muet: #64748B;
+  --hero-fond: #0B1B2B;
+  --police-titre: 'Inter', system-ui, -apple-system, sans-serif;
+  --police-corps: 'Inter', system-ui, -apple-system, sans-serif;
+}
+body { font-family: var(--police-corps); background: var(--fond-site); color: var(--texte-principal); }
+h1, h2, h3, h4, h5, h6 { font-family: var(--police-titre); color: var(--bleu); }
+/* Charte graphique officielle professionnelle BEST AÉROS SERVICE - 09/11/2026 13:31 */

@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact – {{ APP_NAME }} | Libreville, Gabon{% endblock %}
+{% block nav_contact %}actif{% endblock %}
+
+{% block content %}
+
+<!-- ═══ EN-TÊTE ═══ -->
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:3.5rem 1rem; text-align:center;">
+  <div class="conteneur">
+    <span class="badge" style="background:rgba(217,119,6,0.2); color:#D97706; border:1px solid #D97706; margin-bottom:1rem; display:inline-block;">
+      📍 Basé à Libreville, Gabon
+    </span>
+    <h1 style="font-size:clamp(1.75rem,4vw,2.75rem); font-weight:800; margin-bottom:0.75rem;">
+      Contact &amp; Bureaux au Gabon
+    </h1>
+    <p style="color:rgba(255,255,255,0.8); max-width:580px; margin:0 auto; line-height:1.7;">
+      Notre équipe à Libreville est à votre disposition du lundi au vendredi de 8h à 18h pour toute question relative à nos formations, drones ou démarches ANAC.
+    </p>
+  </div>
+</section>
+
+<!-- ═══ CONTENU PRINCIPAL ═══ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="grille-2" style="gap:2.5rem; align-items:flex-start;">
+
+      <!-- Colonne gauche : Coordonnées -->
+      <div>
+        <div class="carte" style="padding:2rem; margin-bottom:1.5rem;">
+          <h2 style="color:#1E3A8A; font-weight:700; font-size:1.25rem; margin-bottom:1.5rem;">📋 Nos Coordonnées</h2>
+
+          <div style="display:flex; flex-direction:column; gap:1.25rem;">
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="font-size:1.5rem; min-width:2rem; text-align:center;">📍</div>
+              <div>
+                <div style="font-weight:700; color:#1E3A8A; margin-bottom:0.2rem;">Siège Social</div>
+                <div style="color:#475569; line-height:1.6;">
+                  Boulevard Triomphal, Quartier Louis<br>
+                  Libreville, République Gabonaise
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="font-size:1.5rem; min-width:2rem; text-align:center;">📞</div>
+              <div>
+                <div style="font-weight:700; color:#1E3A8A; margin-bottom:0.2rem;">Téléphone</div>
+                <div style="color:#475569;">
+                  <a href="tel:+24107784512" style="color:#1E3A8A; text-decoration:none; font-weight:600;">+241 07 78 45 12</a><br>
+                  <a href="tel:+24106223456" style="color:#1E3A8A; text-decoration:none; font-weight:600;">+241 06 22 34 56</a>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="font-size:1.5rem; min-width:2rem; text-align:center;">💬</div>
+              <div>
+                <div style="font-weight:700; color:#1E3A8A; margin-bottom:0.2rem;">WhatsApp</div>
+                <a href="https://wa.me/{{ WHATSAPP_GABON }}" target="_blank" rel="noopener"
+                   style="display:inline-flex; align-items:center; gap:0.5rem; background:#25D366; color:#fff; padding:0.5rem 1rem; border-radius:8px; text-decoration:none; font-weight:600; font-size:0.9rem;">
+                  💬 Écrire sur WhatsApp
+                </a>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="font-size:1.5rem; min-width:2rem; text-align:center;">✉</div>
+              <div>
+                <div style="font-weight:700; color:#1E3A8A; margin-bottom:0.2rem;">Email</div>
+                <a href="mailto:{{ EMAIL_CONTACT }}" style="color:#1E3A8A; text-decoration:none; font-weight:600;">{{ EMAIL_CONTACT }}</a>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:1rem; align-items:flex-start;">
+              <div style="font-size:1.5rem; min-width:2rem; text-align:center;">🕐</div>
+              <div>
+                <div style="font-weight:700; color:#1E3A8A; margin-bottom:0.2rem;">Horaires d'ouverture</div>
+                <div style="color:#475569;">
+                  <strong>Lundi – Vendredi :</strong> 8h00 – 18h00<br>
+                  <strong>Samedi :</strong> 9h00 – 15h00<br>
+                  <span style="color:#EF4444; font-size:0.85rem;">Fermé le dimanche et jours fériés</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badge ANAC -->
+        <div style="background:#F0FDF4; border:1px solid #A7F3D0; border-radius:12px; padding:1.25rem; display:flex; gap:0.75rem; align-items:center;">
+          <span style="font-size:1.75rem;">✅</span>
+          <div>
+            <div style="font-weight:700; color:#059669;">Centre Agréé ANAC Gabon</div>
+            <div style="color:#475569; font-size:0.85rem;">Toutes nos activités sont conformes à la réglementation de l'Aviation Civile gabonaise.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne droite : Formulaire -->
+      <div class="carte" style="padding:2rem;">
+        <h2 style="color:#1E3A8A; font-weight:700; font-size:1.25rem; margin-bottom:1.5rem;">✉ Envoyer un message</h2>
+
+        {% if messages %}
+          {% for msg in messages %}
+            <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="post" action="{% url 'core:contact' %}" novalidate>
+          {% csrf_token %}
+
+          <div class="champ mb-4">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Nom complet <span style="color:#EF4444;">*</span></label>
+            <input type="text" name="nom" class="input" placeholder="Jean-Baptiste Obiang" required maxlength="120">
+          </div>
+
+          <div class="champ mb-4">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Adresse email <span style="color:#EF4444;">*</span></label>
+            <input type="email" name="email" class="input" placeholder="votre@email.com" required>
+          </div>
+
+          <div class="champ mb-4">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Téléphone (optionnel)</label>
+            <input type="tel" name="telephone" class="input" placeholder="+241 07 XX XX XX">
+          </div>
+
+          <div class="champ mb-4">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Sujet de votre demande <span style="color:#EF4444;">*</span></label>
+            <select name="sujet" class="input" required>
+              <option value="">— Choisissez un sujet —</option>
+              <option value="general">Question Générale</option>
+              <option value="achat_drone">Achat de Drone</option>
+              <option value="formation">Formation au Télépilotage</option>
+              <option value="immatriculation">Immatriculation ANAC</option>
+              <option value="autre">Autre</option>
+            </select>
+          </div>
+
+          <div class="champ mb-4">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Votre message <span style="color:#EF4444;">*</span></label>
+            <textarea name="message" class="input" rows="5" placeholder="Décrivez votre demande ou projet..." required style="resize:vertical;"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-ambre btn-bloque" style="font-size:1rem; padding:0.85rem;">
+            📨 Envoyer le message
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

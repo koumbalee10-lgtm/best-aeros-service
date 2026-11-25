@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Espace Direction Générale – {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="dg-barre-haut">
+  <div class="conteneur" style="display:flex; justify-content:space-between; align-items:center;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="display:inline-block; width:10px; height:10px; background:#10B981; border-radius:50%;"></span>
+      <span style="font-weight:bold; color:#FFFFFF; font-size:0.95rem;">Espace Direction</span>
+    </div>
+    <span class="dg-barre-titre">Tableau de bord DG</span>
+  </div>
+</div>
+
+<div class="conteneur py-4" style="max-width:860px;">
+  <!-- Profil DG avec Avatar interactif -->
+  <div style="display:flex; align-items:center; gap:1.25rem; margin-bottom:1.5rem; background:#FFFFFF; padding:1.25rem; border-radius:16px; border:1px solid var(--bordure); box-shadow:var(--ombre-sm);">
+    <div id="dg_avatar_click" class="avatar-interactif" style="width:68px; height:68px; border-radius:50%; overflow:hidden; border:2.5px solid #2563EB; cursor:pointer;" title="Changer votre photo de profil">
+      <img id="dg_avatar_img" src="{{ user.get_avatar_url }}" alt="{{ user.first_name }}" style="width:100%; height:100%; object-fit:cover;">
+    </div>
+    <input type="file" id="dg_avatar_file" accept="image/*" capture="user" style="display:none;">
+
+    <div style="flex-grow:1;">
+      <h1 style="font-size:1.6rem; margin-bottom:0.25rem;">Bonjour, {{ user.first_name }} {{ user.last_name }}</h1>
+      <p style="font-size:0.9rem; color:var(--texte-secondaire); margin-bottom:0;">
+        Directeur Général &bull; <span style="color:var(--bleu-roi); font-weight:600;">📸 Touchez votre photo pour la changer</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Métriques DG -->
+  <div class="grille-3 mb-6">
+    <div class="carte text-center" style="padding:1.25rem;">
+      <p style="color:var(--texte-muet); font-size:0.85rem; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">En attente</p>
+      <div style="font-size:2.2rem; font-weight:900; color:var(--ambre); line-height:1;">{{ en_attente }}</div>
+      <span style="display:inline-block; font-size:0.8rem; font-weight:bold; color:var(--bleu); margin-top:0.5rem;">À traiter</span>
+    </div>
+
+    <div class="carte text-center" style="padding:1.25rem;">
+      <p style="color:var(--texte-muet); font-size:0.85rem; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Confirmées</p>
+      <div style="font-size:2.2rem; font-weight:900; color:var(--vert); line-height:1;">{{ confirmees }}</div>
+      <span style="display:inline-block; font-size:0.8rem; font-weight:bold; color:var(--vert); margin-top:0.5rem;">Validées</span>
+    </div>
+
+    <div class="carte text-center" style="padding:1.25rem;">
+      <p style="color:var(--texte-muet); font-size:0.85rem; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Sessions Ouvertes</p>
+      <div style="font-size:2.2rem; font-weight:900; color:var(--bleu); line-height:1;">{{ sessions_ouvertes }}</div>
+      <a href="{% url 'formations:sessions' %}" style="display:inline-block; font-size:0.8rem; font-weight:bold; color:var(--bleu); margin-top:0.5rem;">Voir calendrier</a>
+    </div>
+  </div>
+
+  <!-- Actions Rapides -->
+  <div class="carte mb-6">
+    <h3 style="margin-bottom:1rem;">Actions Rapides</h3>
+    <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+      <a href="{% url 'catalogue:drones' %}" class="btn btn-ambre">
+        🚁 Photos & Catalogue Drones
+      </a>
+      <a href="{% url 'formations:dg_factures' %}" class="btn btn-contour-bleu">
+        📄 Factures & PDF
+      </a>
+      <a href="{% url 'formations:sessions' %}" class="btn btn-contour-bleu">
+        📅 Sessions Gabon
+      </a>
+    </div>
+  </div>
+
+  <!-- Dernières inscriptions -->
+  <div class="carte">
+    <h3 style="margin-bottom:1rem;">Dernières réservations à traiter</h3>
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Forfait</th>
+            <th>Lieu</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in dernieres_res %}
+            <tr>
+              <td>
+                <strong>{{ r.client.first_name }} {{ r.client.last_name }}</strong>
+                <div style="font-size:0.78rem; color:var(--texte-muet);">{{ r.client.telephone|default:r.client.email }}</div>
+              </td>
+              <td>{{ r.forfait.nom }}</td>
+              <td>{{ r.session.lieu.ville|default:"Sans session" }}</td>
+              <td>
+                {% if r.statut == 'en_attente' %}<span class="badge badge-attente">⏳ En attente</span>
+                {% elif r.statut == 'confirmee' %}<span class="badge badge-succes">✓ Confirmée</span>
+                {% elif r.statut == 'refusee' %}<span class="badge badge-erreur">✕ Refusée</span>
+                {% else %}<span class="badge badge-annule">{{ r.statut }}</span>{% endif %}
+              </td>
+              <td>
+                {% if r.statut == 'en_attente' %}
+                  <div style="display:flex; gap:4px;">
+                    <a href="{% url 'formations:dg_action' r.id 'valider' %}" class="btn btn-sm btn-vert" style="padding:4px 8px; font-size:0.75rem;">✓ Valider</a>
+                    <a href="{% url 'formations:dg_action' r.id 'refuse' %}" class="btn btn-sm btn-contour-rouge" style="padding:4px 8px; font-size:0.75rem;" onclick="return confirm('Refuser cette inscription ?');">✕ Refuser</a>
+                  </div>
+                {% elif not r.paye %}
+                  <a href="{% url 'formations:dg_action' r.id 'payer' %}" class="btn btn-sm btn-ambre" style="padding:4px 8px; font-size:0.75rem;">Encaisser</a>
+                {% else %}
+                  <span class="badge badge-paye">💳 Payé</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="text-center" style="padding:2rem;">Aucune réservation enregistrée.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var box = document.getElementById('dg_avatar_click');
+  var input = document.getElementById('dg_avatar_file');
+  var img = document.getElementById('dg_avatar_img');
+  if (box && input) {
+    box.addEventListener('click', function() { input.click(); });
+    input.addEventListener('change', function() {
+      if (!input.files || !input.files[0]) return;
+      var fd = new FormData();
+      fd.append('photo_profil', input.files[0]);
+      fd.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      box.style.opacity = '0.5';
+
+      fetch('{% url "accounts:changer_avatar" %}', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: fd
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        box.style.opacity = '1';
+        if (d.succes) {
+          img.src = d.avatar_url + '?t=' + new Date().getTime();
+          window.afficherToast(d.message, 'succes');
+        } else {
+          alert('Erreur : ' + d.message);
+        }
+      })
+      .catch(function() { box.style.opacity = '1'; alert('Erreur upload avatar.'); });
+    });
+  }
+});
+</script>
+{% endblock %}

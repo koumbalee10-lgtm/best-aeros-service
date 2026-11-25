@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="evoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="100%" stop-color="#F3F4F6"/>
+    </linearGradient>
+    <linearGradient id="autelOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="60%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#C2410C"/>
+    </linearGradient>
+    <filter id="shadowEvo" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="16" stdDeviation="20" flood-color="#0B1F3A" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="400" rx="16" fill="url(#evoBg)"/>
+  <ellipse cx="300" cy="345" rx="165" ry="25" fill="#0B1F3A" opacity="0.14"/>
+
+  <g filter="url(#shadowEvo)">
+    <!-- Carbon Arms -->
+    <path d="M260 215 L135 270 L115 285 L120 305 L165 295 L275 230 Z" fill="#18181B"/>
+    <circle cx="125" cy="295" r="20" fill="#27272A" stroke="#EA580C" stroke-width="2"/>
+    <ellipse cx="125" cy="295" rx="90" ry="14" fill="#52525B" opacity="0.4" stroke="#27272A" stroke-width="2"/>
+
+    <path d="M340 215 L465 270 L485 285 L480 305 L435 295 L325 230 Z" fill="#18181B"/>
+    <circle cx="475" cy="295" r="20" fill="#27272A" stroke="#EA580C" stroke-width="2"/>
+    <ellipse cx="475" cy="295" rx="90" ry="14" fill="#52525B" opacity="0.4" stroke="#27272A" stroke-width="2"/>
+
+    <path d="M270 170 L145 118 L125 105 L120 85 L165 95 L280 155 Z" fill="#18181B"/>
+    <circle cx="135" cy="95" r="20" fill="#27272A" stroke="#EA580C" stroke-width="2"/>
+    <ellipse cx="135" cy="95" rx="90" ry="14" fill="#52525B" opacity="0.4" stroke="#27272A" stroke-width="2"/>
+
+    <path d="M330 170 L455 118 L475 105 L480 85 L435 95 L320 155 Z" fill="#18181B"/>
+    <circle cx="465" cy="95" r="20" fill="#27272A" stroke="#EA580C" stroke-width="2"/>
+    <ellipse cx="465" cy="95" rx="90" ry="14" fill="#52525B" opacity="0.4" stroke="#27272A" stroke-width="2"/>
+
+    <!-- Rugged Signature Orange Autel Fuselage -->
+    <path d="M276 108 C290 92 310 92 324 108 L356 178 C366 210 356 248 342 276 L320 290 C308 296 292 296 280 290 L258 276 C244 248 234 210 244 178 Z" fill="url(#autelOrange)" stroke="#9A3412" stroke-width="2.5"/>
+
+    <!-- Center Black Accent Stripe -->
+    <path d="M292 110 L308 110 L314 265 L286 265 Z" fill="#18181B"/>
+
+    <!-- Dual Gimbal: FLIR Thermal 640 + 8K Ultra-HD -->
+    <rect x="276" y="68" width="48" height="42" rx="8" fill="#18181B" stroke="#EA580C" stroke-width="2"/>
+    <!-- Thermal Core (Radiometric FLIR) -->
+    <circle cx="290" cy="88" r="9" fill="#9333EA" stroke="#E11D48" stroke-width="2"/>
+    <circle cx="290" cy="88" r="4" fill="#FACC15"/>
+    <!-- 8K Optical Lens -->
+    <circle cx="310" cy="88" r="9" fill="#09090B" stroke="#60A5FA" stroke-width="2"/>
+    <circle cx="310" cy="88" r="4" fill="#38BDF8"/>
+  </g>
+
+  <!-- Tag -->
+  <g transform="translate(30, 30)">
+    <rect width="185" height="32" rx="8" fill="#C2410C"/>
+    <text x="92" y="21" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Thermique 640T · 8K Optique</text>
+  </g>
+</svg>
+

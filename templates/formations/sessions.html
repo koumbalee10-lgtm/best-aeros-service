@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sessions de Formation – {{ APP_NAME }} | Gabon{% endblock %}
+{% block nav_sessions %}actif{% endblock %}
+
+{% block content %}
+
+<!-- ═══ EN-TÊTE ═══ -->
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:4rem 1rem; text-align:center;">
+  <div class="conteneur">
+    <span class="badge" style="background:rgba(16,185,129,0.2); color:#10B981; border:1px solid #10B981; margin-bottom:1rem; display:inline-block;">
+      📅 PLANNING DES FORMATIONS
+    </span>
+    <h1 style="font-size:clamp(1.75rem,4vw,2.75rem); font-weight:800; margin-bottom:0.75rem;">
+      Prochaines Sessions de Formation au Gabon
+    </h1>
+    <p style="color:rgba(255,255,255,0.8); max-width:600px; margin:0 auto; line-height:1.7;">
+      Inscrivez-vous dès maintenant pour garantir votre place. Sessions organisées à Libreville, Port-Gentil et dans toute la République Gabonaise.
+    </p>
+  </div>
+</section>
+
+<!-- ═══ FILTRES PAR VILLE ═══ -->
+{% if villes %}
+<div style="background:#fff; border-bottom:1px solid #E2E8F0; padding:1rem 0; position:sticky; top:0; z-index:10;">
+  <div class="conteneur" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+    <span style="font-weight:700; color:#374151; font-size:0.9rem;">Filtrer par ville :</span>
+    <a href="{% url 'formations:sessions' %}"
+       class="btn {% if not ville_active %}btn-ambre{% else %}btn-contour-blanc{% endif %}"
+       style="font-size:0.85rem; padding:0.35rem 0.9rem;">
+      Toutes
+    </a>
+    {% for ville in villes %}
+    <a href="?ville={{ ville|urlencode }}"
+       class="btn {% if ville_active == ville %}btn-ambre{% else %}btn-contour-blanc{% endif %}"
+       style="font-size:0.85rem; padding:0.35rem 0.9rem; color:{% if ville_active != ville %}#1E3A8A{% else %}#fff{% endif %}; border-color:#1E3A8A;">
+      📍 {{ ville }}
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<!-- ═══ LISTE DES SESSIONS ═══ -->
+<section class="section">
+  <div class="conteneur">
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if sessions %}
+      <div style="display:flex; flex-direction:column; gap:1.25rem;">
+        {% for s in sessions %}
+        <div class="carte" style="padding:1.75rem; display:flex; flex-wrap:wrap; gap:1.5rem; align-items:center;">
+          <!-- Infos principale -->
+          <div style="flex:1; min-width:250px;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem; flex-wrap:wrap;">
+              <h2 style="font-size:1.1rem; font-weight:800; color:#1E3A8A; margin:0;">{{ s.forfait.nom }}</h2>
+              {% if s.statut == 'ouvert' %}
+                <span class="badge badge-succes">✅ Ouvert</span>
+              {% elif s.statut == 'complet' %}
+                <span class="badge badge-erreur">🚫 Complet</span>
+              {% elif s.statut == 'en_cours' %}
+                <span class="badge badge-attente">⏳ En cours</span>
+              {% elif s.statut == 'termine' %}
+                <span class="badge" style="background:#F1F5F9; color:#64748B;">✓ Terminé</span>
+              {% else %}
+                <span class="badge badge-attente">{{ s.statut }}</span>
+              {% endif %}
+            </div>
+
+            <div style="display:flex; gap:1.5rem; flex-wrap:wrap; color:#475569; font-size:0.9rem; margin-bottom:0.5rem;">
+              <span>📍 {{ s.lieu.nom }} – {{ s.lieu.ville }}</span>
+              <span>📅 {{ s.date_debut|date:"d/m/Y" }} → {{ s.date_fin|date:"d/m/Y" }}</span>
+            </div>
+
+            <div style="display:flex; gap:1rem; flex-wrap:wrap; font-size:0.85rem;">
+              <span style="color:#64748B;">
+                👥 Places : <strong style="color:#1E3A8A;">{{ s.places_restantes }}</strong> / {{ s.places_total }} restantes
+              </span>
+              {% if s.forfait.prix_fcfa %}
+              <span style="color:#D97706; font-weight:700;">{{ s.forfait.prix_fcfa|floatformat:0 }} FCFA</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Action -->
+          <div style="text-align:center;">
+            {% if s.statut == 'ouvert' and s.places_restantes > 0 %}
+              <a href="{% url 'formations:reserver' %}?forfait={{ s.forfait.id }}&session={{ s.id }}"
+                 class="btn btn-ambre" style="white-space:nowrap;">
+                📝 Réserver
+              </a>
+            {% elif s.statut == 'complet' or s.places_restantes == 0 %}
+              <span class="btn" style="background:#E2E8F0; color:#94A3B8; cursor:not-allowed; white-space:nowrap;">
+                🚫 Complet
+              </span>
+            {% else %}
+              <span style="color:#94A3B8; font-size:0.85rem;">Non disponible</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      <div style="text-align:center; padding:4rem 1rem;">
+        <div style="font-size:4rem; margin-bottom:1rem;">📅</div>
+        <h2 style="color:#1E3A8A; font-size:1.4rem; margin-bottom:0.75rem;">
+          {% if ville_active %}
+            Aucune session disponible à {{ ville_active }}
+          {% else %}
+            Aucune session disponible pour le moment
+          {% endif %}
+        </h2>
+        <p style="color:#64748B; max-width:480px; margin:0 auto 2rem; line-height:1.7;">
+          Contactez-nous pour organiser votre formation selon vos disponibilités. Nous planifions des sessions sur mesure pour groupes et entreprises.
+        </p>
+        <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <a href="{% url 'core:contact' %}" class="btn btn-ambre">📞 Nous contacter</a>
+          <a href="{% url 'catalogue:forfaits' %}" class="btn btn-contour-blanc" style="color:#1E3A8A; border-color:#1E3A8A;">📋 Voir les forfaits</a>
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

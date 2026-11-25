@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="airBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F8FAFC"/>
+      <stop offset="100%" stop-color="#E2E8F0"/>
+    </linearGradient>
+    <linearGradient id="airBody" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#94A3B8"/>
+      <stop offset="50%" stop-color="#64748B"/>
+      <stop offset="100%" stop-color="#475569"/>
+    </linearGradient>
+    <filter id="shadowAir" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#0B1F3A" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="400" rx="16" fill="url(#airBg)"/>
+  <ellipse cx="300" cy="345" rx="160" ry="26" fill="#0B1F3A" opacity="0.14"/>
+
+  <g filter="url(#shadowAir)">
+    <!-- Carbon Arms -->
+    <path d="M260 215 L140 265 L120 280 L125 300 L165 290 L275 230 Z" fill="#334155"/>
+    <circle cx="130" cy="290" r="20" fill="#1E293B"/>
+    <ellipse cx="130" cy="290" rx="85" ry="14" fill="#64748B" opacity="0.4" stroke="#475569" stroke-width="2"/>
+
+    <path d="M340 215 L460 265 L480 280 L475 300 L435 290 L325 230 Z" fill="#334155"/>
+    <circle cx="470" cy="290" r="20" fill="#1E293B"/>
+    <ellipse cx="470" cy="290" rx="85" ry="14" fill="#64748B" opacity="0.4" stroke="#475569" stroke-width="2"/>
+
+    <path d="M270 170 L150 120 L130 110 L125 90 L165 100 L280 155 Z" fill="#334155"/>
+    <circle cx="140" cy="100" r="20" fill="#1E293B"/>
+    <ellipse cx="140" cy="100" rx="85" ry="14" fill="#64748B" opacity="0.4" stroke="#475569" stroke-width="2"/>
+
+    <path d="M330 170 L450 120 L470 110 L475 90 L435 100 L320 155 Z" fill="#334155"/>
+    <circle cx="460" cy="100" r="20" fill="#1E293B"/>
+    <ellipse cx="460" cy="100" rx="85" ry="14" fill="#64748B" opacity="0.4" stroke="#475569" stroke-width="2"/>
+
+    <!-- Aerodynamic Stealth Body -->
+    <path d="M275 110 C290 95 310 95 325 110 L355 180 C365 210 355 245 340 270 L320 285 C308 292 292 292 280 285 L260 270 C245 245 235 210 245 180 Z" fill="url(#airBody)" stroke="#475569" stroke-width="2"/>
+
+    <!-- Cooling Vents & Battery Status -->
+    <path d="M280 200 L320 200 L325 240 L275 240 Z" fill="#1E293B" opacity="0.7"/>
+    <circle cx="285" cy="210" r="3" fill="#10B981"/>
+    <circle cx="295" cy="210" r="3" fill="#10B981"/>
+    <circle cx="305" cy="210" r="3" fill="#10B981"/>
+    <circle cx="315" cy="210" r="3" fill="#10B981"/>
+
+    <!-- Dual Camera Gimbal (Air 3 Distinctive Double Lens) -->
+    <rect x="282" y="75" width="36" height="34" rx="8" fill="#0F172A" stroke="#F59E0B" stroke-width="2"/>
+    <!-- Top Telephoto Lens 70mm -->
+    <circle cx="300" cy="88" r="7" fill="#1E293B" stroke="#CBD5E1" stroke-width="1.5"/>
+    <circle cx="300" cy="88" r="3" fill="#38BDF8"/>
+    <!-- Bottom Wide Lens 24mm -->
+    <circle cx="300" cy="100" r="7" fill="#1E293B" stroke="#CBD5E1" stroke-width="1.5"/>
+    <circle cx="300" cy="100" r="3" fill="#F59E0B"/>
+  </g>
+
+  <!-- Tag -->
+  <g transform="translate(30, 30)">
+    <rect width="165" height="32" rx="8" fill="#0B1F3A"/>
+    <text x="82" y="21" font-family="sans-serif" font-size="13" font-weight="bold" fill="#F59E0B" text-anchor="middle">Double Caméra · 46 min</text>
+  </g>
+</svg>
+

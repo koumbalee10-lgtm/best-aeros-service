@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Réserver une Formation – {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+
+<!-- ═══ EN-TÊTE ═══ -->
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:3.5rem 1rem; text-align:center;">
+  <div class="conteneur">
+    <span class="badge" style="background:rgba(217,119,6,0.2); color:#D97706; border:1px solid #D97706; margin-bottom:1rem; display:inline-block;">
+      📝 INSCRIPTION EN LIGNE
+    </span>
+    <h1 style="font-size:clamp(1.5rem,3.5vw,2.25rem); font-weight:800; margin-bottom:0.5rem;">
+      Réserver une Formation
+    </h1>
+    <p style="color:rgba(255,255,255,0.8); line-height:1.6;">Formation certifiée ANAC Gabon · Validation sous 24h</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="conteneur" style="max-width:720px; margin:0 auto;">
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if user.is_authenticated %}
+
+    <div class="carte" style="padding:2rem;">
+      <form method="post" action="{% url 'formations:reserver' %}" novalidate>
+        {% csrf_token %}
+
+        <!-- Forfait -->
+        <div class="champ mb-4">
+          <label style="display:block; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+            📋 Forfait de formation <span style="color:#EF4444;">*</span>
+          </label>
+          <select name="forfait" class="input" required>
+            <option value="">— Choisissez un forfait —</option>
+            {% for f in forfaits %}
+            <option value="{{ f.id }}" {% if forfait_preselection and forfait_preselection.id == f.id %}selected{% endif %}>
+              {{ f.nom }} – {{ f.prix_fcfa|floatformat:0 }} FCFA ({{ f.duree_jours }} j.)
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Session -->
+        <div class="champ mb-4">
+          <label style="display:block; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+            📅 Session (optionnel)
+          </label>
+          <select name="session" class="input">
+            <option value="">— Aucune session sélectionnée / À planifier —</option>
+            {% for s in sessions %}
+            <option value="{{ s.id }}" {% if session_preselection and session_preselection.id == s.id %}selected{% endif %}>
+              {{ s.forfait.nom }} · {{ s.lieu.nom }}, {{ s.lieu.ville }} · {{ s.date_debut|date:"d/m/Y" }} – {{ s.date_fin|date:"d/m/Y" }}
+              ({{ s.places_restantes }} place{% if s.places_restantes > 1 %}s{% endif %} dispo.)
+            </option>
+            {% endfor %}
+          </select>
+          <small style="color:#94A3B8; font-size:0.8rem; margin-top:0.25rem; display:block;">
+            Laissez vide si vous souhaitez que l'équipe vous propose une date.
+          </small>
+        </div>
+
+        <!-- Drone -->
+        <div class="champ mb-4">
+          <label style="display:block; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+            🚁 Drone souhaité (optionnel)
+          </label>
+          <select name="drone" class="input">
+            <option value="">— Pas de drone pour l'instant —</option>
+            {% for d in drones %}
+            <option value="{{ d.id }}">
+              {{ d.nom }} – {{ d.prix_fcfa|floatformat:0 }} FCFA
+            </option>
+            {% endfor %}
+          </select>
+          <small style="color:#94A3B8; font-size:0.8rem; margin-top:0.25rem; display:block;">
+            Ajoutez un drone homologué ANAC à votre commande.
+          </small>
+        </div>
+
+        <!-- Remarques -->
+        <div class="champ mb-4">
+          <label style="display:block; font-weight:700; color:#374151; margin-bottom:0.4rem;">
+            💬 Remarques / Informations complémentaires
+          </label>
+          <textarea name="remarques" class="input" rows="4"
+                    placeholder="Précisez votre niveau, disponibilités, objectifs professionnels..." style="resize:vertical;"></textarea>
+        </div>
+
+        <!-- Note -->
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:0.85rem; margin-bottom:1.5rem; font-size:0.85rem; color:#92400E; line-height:1.5;">
+          ℹ️ <strong>Important :</strong> Votre réservation sera examinée et validée par la Direction Générale de BEST AÉROS SERVICE sous <strong>24h ouvrées</strong>. Vous recevrez une notification de confirmation.
+        </div>
+
+        <button type="submit" class="btn btn-ambre btn-bloque" style="font-size:1rem; padding:0.9rem;">
+          ✅ Confirmer la réservation
+        </button>
+      </form>
+    </div>
+
+    {% else %}
+    <!-- Non connecté -->
+    <div class="carte" style="padding:3rem; text-align:center;">
+      <div style="font-size:4rem; margin-bottom:1rem;">🔒</div>
+      <h2 style="color:#1E3A8A; font-weight:800; margin-bottom:0.75rem;">Connexion requise</h2>
+      <p style="color:#475569; max-width:400px; margin:0 auto 2rem; line-height:1.7;">
+        Vous devez être connecté à votre espace BEST AÉROS SERVICE pour réserver une formation.
+      </p>
+      <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+        <a href="{% url 'accounts:login' %}?next={{ request.path }}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-ambre">
+          🔑 Se connecter
+        </a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-contour-blanc" style="color:#1E3A8A; border-color:#1E3A8A;">
+          ✍️ Créer un compte
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

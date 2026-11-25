@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Catalogue Drones Homologués ANAC & Prix FCFA – {{ APP_NAME }}{% endblock %}
+{% block nav_drones %}actif{% endblock %}
+
+{% block content %}
+<div class="conteneur py-8">
+  <div style="max-width:820px; margin-bottom:2rem;">
+    <div style="display:inline-flex; align-items:center; gap:8px; background:#D1FAE5; border:1px solid #A7F3D0; border-radius:999px; padding:4px 12px; margin-bottom:0.75rem;">
+      <span style="font-size:0.8rem; font-weight:bold; color:#065F46;">✓ 100% HOMOLOGATION ANAC GABON</span>
+    </div>
+    <h1 style="margin-bottom:0.75rem;">Catalogue des Drones Professionnels</h1>
+    <p style="font-size:1.05rem; color:var(--texte-secondaire); line-height:1.6;">
+      Découvrez notre flotte de drones homologués pour le Gabon. Chaque modèle est testé pour résister aux conditions côtières de Libreville et aux forêts équatoriales. Tarifs officiels en Francs CFA (XAF) avec garantie et assistance locale.
+    </p>
+  </div>
+
+  <!-- Filtres par catégorie -->
+  <div class="filtres-pills" style="margin-bottom:2rem;">
+    <a href="{% url 'catalogue:drones' %}" class="filtre-pill {% if not categorie_active %}actif{% endif %}">Tous les drones</a>
+    <a href="{% url 'catalogue:drones' %}?categorie=Léger" class="filtre-pill {% if categorie_active == 'Léger' %}actif{% endif %}">Léger & Prise de vue</a>
+    <a href="{% url 'catalogue:drones' %}?categorie=Cartographie" class="filtre-pill {% if categorie_active == 'Cartographie' %}actif{% endif %}">Cartographie RTK</a>
+    <a href="{% url 'catalogue:drones' %}?categorie=Thermique" class="filtre-pill {% if categorie_active == 'Thermique' %}actif{% endif %}">Thermique & Pétrole</a>
+    <a href="{% url 'catalogue:drones' %}?categorie=Industriel" class="filtre-pill {% if categorie_active == 'Industriel' %}actif{% endif %}">Industriel Lourd IP55</a>
+    <a href="{% url 'catalogue:drones' %}?categorie=Agriculture" class="filtre-pill {% if categorie_active == 'Agriculture' %}actif{% endif %}">Agriculture & Forêt</a>
+  </div>
+
+  <div class="grille-3">
+    {% for d in drones %}
+      <div class="drone-carte">
+        <div class="drone-visuel" style="position:relative;">
+          {% if d.badge %}
+            <span class="drone-badge-flottant">{{ d.badge }}</span>
+          {% endif %}
+
+          {% if user.is_authenticated and user.is_dg %}
+            <button type="button" class="drone-edit-photo-btn" onclick="document.getElementById('cat_file_{{ d.id }}').click();" title="Changer la photo depuis ordi ou smartphone">
+              📷 Modifier photo
+            </button>
+            <input type="file" id="cat_file_{{ d.id }}" accept="image/*" capture="environment" style="display:none;" onchange="uploadDronePhotoDjango({{ d.id }})">
+          {% endif %}
+
+          <img id="drone_img_{{ d.id }}" src="{{ d.get_image_url }}" alt="{{ d.nom }}" width="400" height="260" loading="lazy">
+        </div>
+
+        <div class="drone-corps">
+          <span class="drone-categorie">{{ d.categorie }}</span>
+          <h2 class="drone-titre" style="font-size:1.25rem;">{{ d.nom }}</h2>
+          <p class="drone-description">{{ d.description }}</p>
+
+          <div class="drone-specs">
+            <div class="drone-spec-item">
+              <span>Autonomie</span>
+              <strong>{{ d.autonomie_minutes }} min</strong>
+            </div>
+            <div class="drone-spec-item">
+              <span>Portée O4</span>
+              <strong>{{ d.portee_km }} km</strong>
+            </div>
+            <div class="drone-spec-item">
+              <span>Capteur Vidéo</span>
+              <strong>{{ d.resolution_camera }}</strong>
+            </div>
+            <div class="drone-spec-item">
+              <span>Poids en vol</span>
+              <strong>{{ d.poids_grammes }} g</strong>
+            </div>
+            <div class="drone-spec-item">
+              <span>Vitesse max</span>
+              <strong>{{ d.vitesse_max_kmh }} km/h</strong>
+            </div>
+            <div class="drone-spec-item">
+              <span>Résist. vent</span>
+              <strong>{{ d.resistance_vent_ms }} m/s</strong>
+            </div>
+          </div>
+
+          <div style="margin-bottom:1rem; font-size:0.82rem; color:var(--vert); font-weight:bold;">
+            ✓ Homologué ANAC Gabon &bull; Stock : {{ d.stock }} unités à Libreville
+          </div>
+
+          <div class="drone-prix-action">
+            <div class="drone-prix">
+              {{ d.prix_fcfa }} FCFA
+              <small>Prix unitaire TTC en FCFA</small>
+            </div>
+            <a href="{% url 'formations:reserver' %}?drone={{ d.id }}" class="btn btn-ambre">
+              Commander
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if user.is_authenticated and user.is_dg %}
+<script>
+function uploadDronePhotoDjango(idDrone) {
+  var input = document.getElementById('cat_file_' + idDrone);
+  if (!input.files || !input.files[0]) return;
+
+  var apercu = document.getElementById('drone_img_' + idDrone);
+  var f = input.files[0];
+
+  var reader = new FileReader();
+  reader.onload = function(e) { apercu.src = e.target.result; };
+  reader.readAsDataURL(f);
+
+  var fd = new FormData();
+  fd.append('photo_drone', f);
+  fd.append('id_drone', idDrone);
+  fd.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+  apercu.style.opacity = '0.5';
+
+  fetch('{% url "catalogue:changer_photo_drone" %}', {
+    method: 'POST',
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    body: fd
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    apercu.style.opacity = '1';
+    if (data.succes) {
+      apercu.src = data.image_url + '?t=' + new Date().getTime();
+      window.afficherToast(data.message, 'succes');
+    } else {
+      alert('Erreur : ' + data.message);
+    }
+  })
+  .catch(function() {
+    apercu.style.opacity = '1';
+    alert('Erreur lors de l\'envoi de la photo.');
+  });
+}
+</script>
+{% endif %}
+{% endblock %}

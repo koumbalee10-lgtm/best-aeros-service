@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /a-propos.php
+Allow: /forfaits.php
+Allow: /drones.php
+Allow: /sessions.php
+Allow: /contact.php
+Disallow: /admin/
+Disallow: /dg/
+Disallow: /client/
+Disallow: /api/
+
+Sitemap: https://bestaeros.ga/sitemap.xml

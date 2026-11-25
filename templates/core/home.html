@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accueil – {{ APP_NAME }} Gabon{% endblock %}
+{% block nav_home %}actif{% endblock %}
+
+{% block content %}
+<!-- Section Hero Moderne & Aéronautique -->
+<section class="hero">
+  <div class="conteneur">
+    <div class="hero-grille">
+      <div>
+        <div style="display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); border-radius:999px; padding:4px 14px; margin-bottom:1rem;">
+          <span style="font-size:0.82rem; font-weight:700; color:#FBBF24;">🇬🇦 N°1 DE LA FORMATION & VENTE DRONE AU GABON</span>
+        </div>
+        <h1 class="hero-titre">
+          Prenez de la hauteur avec des drones certifiés ANAC
+        </h1>
+        <p class="hero-texte">
+          BEST AÉROS SERVICE accompagne les entreprises, géomètres, forestiers et passionnés à Libreville et Port-Gentil. Formation professionnelle, immatriculation officielle et matériel de pointe.
+        </p>
+
+        <div class="hero-boutons">
+          <a href="{% url 'formations:reserver' %}" class="btn btn-ambre btn-lg">
+            Réserver une formation
+          </a>
+          <a href="{% url 'catalogue:drones' %}" class="btn btn-contour-blanc btn-lg">
+            Voir les drones homologués
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <h4>100%</h4>
+            <p>Conforme ANAC Gabon</p>
+          </div>
+          <div class="stat-item">
+            <h4>5 Sites</h4>
+            <p>Libreville, Nkok, POG</p>
+          </div>
+          <div class="stat-item">
+            <h4>+120</h4>
+            <p>Pilotes formés</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visuel">
+        <div class="hero-carte-visuel">
+          <img src="{% static 'img/drones/dji-matrice-350-rtk.svg' %}" alt="DJI Matrice 350 RTK" style="width:100%; height:auto;">
+          <div style="text-align:center; margin-top:1rem;">
+            <strong style="color:#FFFFFF; font-size:1.1rem;">DJI Matrice 350 RTK</strong>
+            <p style="color:#94A3B8; font-size:0.85rem; margin:0;">Flotte disponible à Libreville &middot; Usage Forestier & Minier</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Drones Phares -->
+<section class="section section-fond">
+  <div class="conteneur">
+    <div style="text-align:center; max-width:680px; margin:0 auto 2.5rem;">
+      <h2 style="font-size:2rem; margin-bottom:0.5rem;">Drones Phares Homologués</h2>
+      <p>Nos appareils les plus demandés pour les relevés topographiques, l'inspection industrielle et la vidéo professionnelle.</p>
+    </div>
+
+    <div class="grille-3">
+      {% for d in drones_phares %}
+        <div class="carte text-center" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="height:160px; display:flex; align-items:center; justify-content:center; background:#F8FAFC; border-radius:12px; margin-bottom:1rem; padding:10px;">
+            <img src="{{ d.get_image_url }}" alt="{{ d.nom }}" style="max-height:100%; max-width:100%; object-fit:contain;">
+          </div>
+          <div>
+            <span class="badge badge-light mb-2">{{ d.categorie }}</span>
+            <h3 style="font-size:1.2rem; margin-bottom:0.5rem;">{{ d.nom }}</h3>
+            <p style="font-size:0.88rem; color:var(--texte-secondaire);">{{ d.description|truncatewords:15 }}</p>
+            <div style="font-size:1.25rem; font-weight:900; color:var(--bleu); margin:1rem 0;">
+              {{ d.prix_fcfa }} FCFA
+            </div>
+          </div>
+          <a href="{% url 'formations:reserver' %}?drone={{ d.id }}" class="btn btn-ambre btn-bloque">
+            Commander ce modèle
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

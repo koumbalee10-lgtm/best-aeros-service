@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}À Propos – {{ APP_NAME }} | Formation Drones ANAC Gabon{% endblock %}
+{% block nav_apropos %}actif{% endblock %}
+
+{% block content %}
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" style="background:linear-gradient(135deg,#0F172A 0%,#1E3A8A 60%,#1E3A8A 100%); color:#fff; text-align:center; padding:5rem 1rem;">
+  <div class="conteneur">
+    <span class="badge" style="background:rgba(217,119,6,0.2); color:#D97706; border:1px solid #D97706; margin-bottom:1.5rem; display:inline-block;">
+      ✈ L'EXCELLENCE AÉRONAUTIQUE AU GABON
+    </span>
+    <h1 style="font-size:clamp(2rem,5vw,3.2rem); font-weight:800; margin-bottom:1rem; line-height:1.2;">
+      À Propos de <span style="color:#D97706;">BEST AÉROS SERVICE</span>
+    </h1>
+    <p style="font-size:1.1rem; max-width:680px; margin:0 auto 2rem; color:rgba(255,255,255,0.85); line-height:1.7;">
+      Pionniers de l'aviation civile par drone au Gabon depuis 2016. Nous accompagnons professionnels et particuliers dans leur projet aérien avec un seul objectif : la conformité ANAC et l'excellence opérationnelle.
+    </p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="{% url 'catalogue:forfaits' %}" class="btn btn-ambre">📋 Voir nos forfaits</a>
+      <a href="{% url 'catalogue:drones' %}" class="btn btn-contour-blanc">🚁 Catalogue drones</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MISSION / VISION ═══ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="grille-2" style="align-items:center; gap:3rem;">
+      <div>
+        <span class="badge badge-succes" style="margin-bottom:1rem; display:inline-block;">🎯 Notre Mission</span>
+        <h2 style="font-size:1.9rem; font-weight:800; color:#1E3A8A; margin-bottom:1rem;">
+          Rendre l'espace aérien gabonais sûr et accessible
+        </h2>
+        <p style="color:#475569; line-height:1.75; margin-bottom:1rem;">
+          Depuis Libreville, nous travaillons en étroite collaboration avec l'<strong>Agence Nationale de l'Aviation Civile (ANAC) du Gabon</strong> pour garantir que chaque drone opérant sur le territoire soit homologué, immatriculé et piloté par un télépilote certifié.
+        </p>
+        <p style="color:#475569; line-height:1.75; margin-bottom:1.5rem;">
+          Notre vision est celle d'un Gabon où l'industrie du drone contribue au développement économique : inspection d'infrastructures, agriculture de précision, cartographie, médias et sécurité.
+        </p>
+        <div class="grille-2" style="gap:1rem;">
+          <div style="text-align:center; padding:1.25rem; background:#EFF6FF; border-radius:12px; border-left:4px solid #1E3A8A;">
+            <div style="font-size:2rem; font-weight:900; color:#1E3A8A;">100%</div>
+            <div style="font-size:0.85rem; color:#64748B; font-weight:600;">Légal – Conformité ANAC</div>
+          </div>
+          <div style="text-align:center; padding:1.25rem; background:#FFFBEB; border-radius:12px; border-left:4px solid #D97706;">
+            <div style="font-size:2rem; font-weight:900; color:#D97706;">+150</div>
+            <div style="font-size:0.85rem; color:#64748B; font-weight:600;">Pilotes formés au Gabon</div>
+          </div>
+          <div style="text-align:center; padding:1.25rem; background:#F0FDF4; border-radius:12px; border-left:4px solid #10B981;">
+            <div style="font-size:2rem; font-weight:900; color:#10B981;">5</div>
+            <div style="font-size:0.85rem; color:#64748B; font-weight:600;">Sites de formation actifs</div>
+          </div>
+          <div style="text-align:center; padding:1.25rem; background:#FFF1F2; border-radius:12px; border-left:4px solid #EF4444;">
+            <div style="font-size:2rem; font-weight:900; color:#EF4444;">8 ans</div>
+            <div style="font-size:0.85rem; color:#64748B; font-weight:600;">D'expérience terrain</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,#1E3A8A,#2563EB); border-radius:16px; padding:2.5rem; color:#fff;">
+        <h3 style="font-size:1.4rem; font-weight:700; margin-bottom:1.5rem;">🏆 Notre Vision 2030</h3>
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:1rem;">
+          <li style="display:flex; gap:0.75rem; align-items:flex-start;">
+            <span style="color:#D97706; font-size:1.2rem;">✦</span>
+            <span>Devenir le centre de référence ANAC pour la certification des télépilotes en Afrique centrale</span>
+          </li>
+          <li style="display:flex; gap:0.75rem; align-items:flex-start;">
+            <span style="color:#D97706; font-size:1.2rem;">✦</span>
+            <span>Équiper les entreprises gabonaises de flottes de drones professionnels homologués</span>
+          </li>
+          <li style="display:flex; gap:0.75rem; align-items:flex-start;">
+            <span style="color:#D97706; font-size:1.2rem;">✦</span>
+            <span>Former 500+ télépilotes certifiés d'ici 2030 dans toutes les provinces du Gabon</span>
+          </li>
+          <li style="display:flex; gap:0.75rem; align-items:flex-start;">
+            <span style="color:#D97706; font-size:1.2rem;">✦</span>
+            <span>Implanter des antennes permanentes à Port-Gentil, Franceville et Oyem</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NOS SERVICES ═══ -->
+<section class="section section-fond">
+  <div class="conteneur">
+    <div class="text-center mb-4">
+      <span class="badge badge-succes" style="margin-bottom:0.75rem; display:inline-block;">🛠 Nos Services</span>
+      <h2 style="font-size:1.9rem; font-weight:800; color:#1E3A8A;">Ce que nous faisons pour vous</h2>
+      <p style="color:#64748B; margin-top:0.5rem;">Trois activités complémentaires pour votre projet drone au Gabon</p>
+    </div>
+    <div class="grille-3">
+      <!-- Service 1 -->
+      <div class="carte" style="text-align:center; padding:2rem;">
+        <div style="font-size:3rem; margin-bottom:1rem;">🎓</div>
+        <h3 style="color:#1E3A8A; font-size:1.2rem; font-weight:700; margin-bottom:0.75rem;">Formation Certifiée ANAC</h3>
+        <p style="color:#475569; line-height:1.65; margin-bottom:1.25rem;">
+          Programmes théoriques et pratiques validés par l'ANAC Gabon. Du débutant au pilote professionnel, en passant par la téléopération avancée.
+        </p>
+        <ul style="text-align:left; color:#475569; list-style:none; padding:0; display:flex; flex-direction:column; gap:0.4rem; font-size:0.9rem;">
+          <li>✅ Cours théoriques réglementaires</li>
+          <li>✅ Simulation de vol intérieur</li>
+          <li>✅ Entraînement terrain Angondjé</li>
+          <li>✅ Examen ANAC & Certificat officiel</li>
+        </ul>
+      </div>
+      <!-- Service 2 -->
+      <div class="carte" style="text-align:center; padding:2rem; border-top:4px solid #D97706;">
+        <div style="font-size:3rem; margin-bottom:1rem;">🛒</div>
+        <h3 style="color:#1E3A8A; font-size:1.2rem; font-weight:700; margin-bottom:0.75rem;">Vente & Homologation Drones</h3>
+        <p style="color:#475569; line-height:1.65; margin-bottom:1.25rem;">
+          Distribution officielle DJI, Autel et marques professionnelles. Chaque drone vendu est homologué et prêt pour l'immatriculation ANAC.
+        </p>
+        <ul style="text-align:left; color:#475569; list-style:none; padding:0; display:flex; flex-direction:column; gap:0.4rem; font-size:0.9rem;">
+          <li>✅ Stock disponible à Libreville</li>
+          <li>✅ Garantie constructeur + SAV local</li>
+          <li>✅ Accessoires et pièces détachées</li>
+          <li>✅ Assistance à l'homologation ANAC</li>
+        </ul>
+      </div>
+      <!-- Service 3 -->
+      <div class="carte" style="text-align:center; padding:2rem;">
+        <div style="font-size:3rem; margin-bottom:1rem;">📋</div>
+        <h3 style="color:#1E3A8A; font-size:1.2rem; font-weight:700; margin-bottom:0.75rem;">Immatriculation Officielle</h3>
+        <p style="color:#475569; line-height:1.65; margin-bottom:1.25rem;">
+          Prise en charge complète de vos démarches d'immatriculation auprès de l'ANAC Gabon. Rapide, fiable et 100% conforme à la réglementation gabonaise.
+        </p>
+        <ul style="text-align:left; color:#475569; list-style:none; padding:0; display:flex; flex-direction:column; gap:0.4rem; font-size:0.9rem;">
+          <li>✅ Constitution du dossier ANAC</li>
+          <li>✅ Suivi de la demande</li>
+          <li>✅ Remise du certificat d'immatriculation</li>
+          <li>✅ Renouvellement annuel</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NOS CENTRES ═══ -->
+<section class="section">
+  <div class="conteneur">
+    <div class="text-center mb-4">
+      <span class="badge" style="background:#EFF6FF; color:#1E3A8A; border:1px solid #BFDBFE; margin-bottom:0.75rem; display:inline-block;">📍 Implantation nationale</span>
+      <h2 style="font-size:1.9rem; font-weight:800; color:#1E3A8A;">Nos Centres au Gabon</h2>
+      <p style="color:#64748B; margin-top:0.5rem;">Présents dans les principales villes du pays</p>
+    </div>
+    <div class="grille-3">
+      <div class="carte" style="padding:1.75rem;">
+        <div style="font-size:2rem; margin-bottom:0.75rem;">🏙</div>
+        <h3 style="color:#1E3A8A; font-weight:700; margin-bottom:0.5rem;">Libreville / Angondjé</h3>
+        <span class="badge badge-succes" style="margin-bottom:0.75rem; display:inline-block;">Siège Social</span>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">
+          Boulevard Triomphal, Quartier Louis.<br>
+          Terrain d'entraînement : Zone d'Angondjé.<br>
+          <strong>Tél :</strong> +241 07 78 45 12<br>
+          <strong>Lu-Ve :</strong> 8h – 18h | <strong>Sam :</strong> 9h – 15h
+        </p>
+      </div>
+      <div class="carte" style="padding:1.75rem;">
+        <div style="font-size:2rem; margin-bottom:0.75rem;">🌊</div>
+        <h3 style="color:#1E3A8A; font-weight:700; margin-bottom:0.5rem;">Port-Gentil</h3>
+        <span class="badge badge-attente" style="margin-bottom:0.75rem; display:inline-block;">Antenne Active</span>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">
+          Centre-ville de Port-Gentil, Ogooué-Maritime.<br>
+          Sessions de formation sur demande.<br>
+          <strong>Tél :</strong> +241 06 22 34 56<br>
+          <strong>Rendez-vous uniquement</strong>
+        </p>
+      </div>
+      <div class="carte" style="padding:1.75rem;">
+        <div style="font-size:2rem; margin-bottom:0.75rem;">🏭</div>
+        <h3 style="color:#1E3A8A; font-weight:700; margin-bottom:0.5rem;">Nkok / Zone Spéciale</h3>
+        <span class="badge" style="background:#EFF6FF; color:#1E3A8A; border:1px solid #BFDBFE; margin-bottom:0.75rem; display:inline-block;">Zone Industrielle</span>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">
+          Zone Économique Spéciale de Nkok.<br>
+          Formation dédiée aux entreprises et industriels.<br>
+          <strong>Contact :</strong> Sur devis professionnel<br>
+          <strong>Sessions groupées</strong> disponibles
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ÉQUIPE ═══ -->
+<section class="section section-fond">
+  <div class="conteneur">
+    <div class="text-center mb-4">
+      <span class="badge badge-succes" style="margin-bottom:0.75rem; display:inline-block;">👥 Notre Équipe</span>
+      <h2 style="font-size:1.9rem; font-weight:800; color:#1E3A8A;">Des experts à votre service</h2>
+      <p style="color:#64748B; margin-top:0.5rem;">Une équipe gabonaise passionnée, certifiée et expérimentée</p>
+    </div>
+    <div class="grille-3">
+      <!-- DG -->
+      <div class="carte" style="text-align:center; padding:2rem;">
+        <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#1E3A8A,#2563EB); margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#fff;">👨‍💼</div>
+        <h3 style="font-weight:700; color:#1E3A8A; margin-bottom:0.25rem;">Jean-Pierre Moussavou</h3>
+        <p style="color:#D97706; font-weight:600; font-size:0.9rem; margin-bottom:0.75rem;">Directeur Général</p>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">
+          Fondateur de BEST AÉROS SERVICE. Expert en aviation civile avec 15 ans d'expérience dans le secteur aéronautique gabonais et africain.
+        </p>
+        <div style="margin-top:1rem;">
+          <span class="badge" style="background:#EFF6FF; color:#1E3A8A; font-size:0.75rem;">Certification ANAC Gabon</span>
+        </div>
+      </div>
+      <!-- Instructeur -->
+      <div class="carte" style="text-align:center; padding:2rem; border-top:4px solid #D97706;">
+        <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#D97706,#F59E0B); margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#fff;">👨‍✈️</div>
+        <h3 style="font-weight:700; color:#1E3A8A; margin-bottom:0.25rem;">Instructeur ANAC</h3>
+        <p style="color:#D97706; font-weight:600; font-size:0.9rem; margin-bottom:0.75rem;">Instructeur en Chef</p>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">
+          Instructeur certifié ANAC Gabon, spécialisé dans la formation théorique et pratique. Formateur de plus de 150 télépilotes professionnels.
+        </p>
+        <div style="margin-top:1rem;">
+          <span class="badge badge-succes" style="font-size:0.75rem;">Instructeur Agréé ANAC</span>
+        </div>
+      </div>
+      <!-- Technicien -->
+      <div class="carte" style="text-align:center; padding:2rem;">
+        <div style="width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#10B981,#059669); margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; font-size:2rem; color:#fff;">🔧</div>
+        <h3 style="font-weight:700; color:#1E3A8A; margin-bottom:0.25rem;">Technicien Drones</h3>
+        <p style="color:#D97706; font-weight:600; font-size:0.9rem; margin-bottom:0.75rem;">Responsable Technique</p>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">
+          Technicien spécialisé en maintenance, réparation et calibration de drones civils et professionnels. Partenaire DJI officiel.
+        </p>
+        <div style="margin-top:1rem;">
+          <span class="badge" style="background:#F0FDF4; color:#10B981; border:1px solid #A7F3D0; font-size:0.75rem;">Technicien DJI Certifié</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ APPEL À L'ACTION ═══ -->
+<section class="section" style="background:linear-gradient(135deg,#1E3A8A 0%,#0F172A 100%); color:#fff; text-align:center; padding:4rem 1rem;">
+  <div class="conteneur">
+    <h2 style="font-size:2rem; font-weight:800; margin-bottom:1rem;">
+      Prêt à décoller avec <span style="color:#D97706;">BEST AÉROS SERVICE</span> ?
+    </h2>
+    <p style="color:rgba(255,255,255,0.8); max-width:600px; margin:0 auto 2rem; line-height:1.7;">
+      Rejoignez les +150 pilotes certifiés ANAC formés par notre équipe. Contactez-nous dès aujourd'hui pour démarrer votre projet drone au Gabon.
+    </p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="{% url 'catalogue:forfaits' %}" class="btn btn-ambre">📋 Choisir un forfait</a>
+      <a href="{% url 'core:contact' %}" class="btn btn-contour-blanc">📞 Nous contacter</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

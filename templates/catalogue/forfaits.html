@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Forfaits de Formation – {{ APP_NAME }} | ANAC Gabon{% endblock %}
+{% block nav_forfaits %}actif{% endblock %}
+
+{% block content %}
+
+<!-- ═══ EN-TÊTE ═══ -->
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:4rem 1rem; text-align:center;">
+  <div class="conteneur">
+    <span class="badge" style="background:rgba(217,119,6,0.2); color:#D97706; border:1px solid #D97706; margin-bottom:1rem; display:inline-block;">
+      🎓 FORMATION CERTIFIÉE ANAC GABON
+    </span>
+    <h1 style="font-size:clamp(1.75rem,4vw,2.75rem); font-weight:800; margin-bottom:0.75rem;">
+      Nos Forfaits de Formation au Télépilotage
+    </h1>
+    <p style="color:rgba(255,255,255,0.8); max-width:600px; margin:0 auto; line-height:1.7;">
+      Choisissez le programme adapté à votre projet professionnel. Chaque forfait inclut la certification officielle ANAC Gabon.
+    </p>
+  </div>
+</section>
+
+<!-- ═══ GRILLE DES FORFAITS ═══ -->
+<section class="section">
+  <div class="conteneur">
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if forfaits %}
+      <div class="grille-3">
+        {% for f in forfaits %}
+        <div class="carte" style="padding:2rem; display:flex; flex-direction:column; {% if f.badge %}border-top:4px solid #D97706;{% endif %}">
+          <div style="flex:1;">
+            {% if f.badge %}
+              <span class="badge badge-succes" style="margin-bottom:0.75rem; display:inline-block;">⭐ {{ f.badge }}</span>
+            {% endif %}
+            <h2 style="font-size:1.2rem; font-weight:800; color:#1E3A8A; margin-bottom:0.5rem;">{{ f.nom }}</h2>
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:1rem;">
+              <span style="font-size:0.85rem; color:#64748B; background:#EFF6FF; padding:0.25rem 0.65rem; border-radius:20px;">
+                📅 {{ f.duree_jours }} jour{% if f.duree_jours > 1 %}s{% endif %}
+              </span>
+            </div>
+            <p style="color:#475569; line-height:1.65; margin-bottom:1.5rem; font-size:0.95rem;">{{ f.description }}</p>
+          </div>
+          <div style="margin-top:auto;">
+            <div style="font-size:1.9rem; font-weight:900; color:#1E3A8A; margin-bottom:0.25rem;">
+              {{ f.prix_fcfa|floatformat:0 }} <span style="font-size:1rem; font-weight:600; color:#64748B;">FCFA</span>
+            </div>
+            <div style="color:#94A3B8; font-size:0.8rem; margin-bottom:1.25rem;">TTC · Certification incluse</div>
+            <a href="{% url 'formations:reserver' %}?forfait={{ f.id }}" class="btn btn-ambre btn-bloque">
+              📋 Réserver ce forfait
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div style="text-align:center; padding:4rem 1rem; color:#64748B;">
+        <div style="font-size:3rem; margin-bottom:1rem;">📋</div>
+        <h2 style="color:#1E3A8A; margin-bottom:0.5rem;">Forfaits en cours de mise à jour</h2>
+        <p>Contactez-nous directement pour connaître nos programmes et tarifs.</p>
+        <a href="{% url 'core:contact' %}" class="btn btn-ambre" style="margin-top:1rem;">📞 Nous contacter</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- ═══ AVANTAGES INCLUS ═══ -->
+<section class="section section-fond">
+  <div class="conteneur">
+    <div class="text-center mb-4">
+      <h2 style="font-size:1.6rem; font-weight:800; color:#1E3A8A;">✅ Inclus dans tous les forfaits</h2>
+      <p style="color:#64748B; margin-top:0.5rem;">Des avantages exclusifs pour votre réussite</p>
+    </div>
+    <div class="grille-3">
+      <div style="text-align:center; padding:1.75rem; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+        <div style="font-size:2.5rem; margin-bottom:0.75rem;">📚</div>
+        <h3 style="color:#1E3A8A; font-weight:700; margin-bottom:0.5rem;">Manuel ANAC Officiel</h3>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">Manuel pédagogique complet basé sur la réglementation ANAC Gabon en vigueur.</p>
+      </div>
+      <div style="text-align:center; padding:1.75rem; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+        <div style="font-size:2.5rem; margin-bottom:0.75rem;">🏟</div>
+        <h3 style="color:#1E3A8A; font-weight:700; margin-bottom:0.5rem;">Terrain d'entraînement</h3>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">Accès au terrain d'Angondjé avec drones d'entraînement fournis pendant la formation.</p>
+      </div>
+      <div style="text-align:center; padding:1.75rem; background:#fff; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+        <div style="font-size:2.5rem; margin-bottom:0.75rem;">🏅</div>
+        <h3 style="color:#1E3A8A; font-weight:700; margin-bottom:0.5rem;">Certificat Officiel ANAC</h3>
+        <p style="color:#475569; font-size:0.9rem; line-height:1.6;">Certification reconnue par l'État gabonais, délivrée par l'ANAC à la réussite de l'examen.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:2rem;">
+      <a href="{% url 'formations:sessions' %}" class="btn btn-ambre">📅 Voir les prochaines sessions</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

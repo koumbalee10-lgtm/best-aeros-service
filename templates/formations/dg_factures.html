@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Factures – Espace DG | {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+
+<!-- ═══ EN-TÊTE DG ═══ -->
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:3rem 1rem;">
+  <div class="conteneur" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1 style="font-size:1.6rem; font-weight:800; margin-bottom:0.4rem;">🧾 Factures</h1>
+      <p style="color:rgba(255,255,255,0.75); font-size:0.9rem;">Espace Direction Générale · {{ APP_NAME }}</p>
+    </div>
+    <a href="{% url 'formations:dg_dashboard' %}" class="btn btn-contour-blanc">
+      ← Retour au tableau de bord
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="conteneur">
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if factures %}
+    <div class="carte" style="padding:0; overflow:hidden;">
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+          <thead>
+            <tr style="background:#EFF6FF; color:#1E3A8A;">
+              <th style="padding:1rem 1.25rem; text-align:left; white-space:nowrap;">N° Facture</th>
+              <th style="padding:1rem 1.25rem; text-align:left; white-space:nowrap;">Client</th>
+              <th style="padding:1rem 1.25rem; text-align:left; white-space:nowrap;">Statut</th>
+              <th style="padding:1rem 1.25rem; text-align:right; white-space:nowrap;">Montant TTC</th>
+              <th style="padding:1rem 1.25rem; text-align:left; white-space:nowrap;">Date Émission</th>
+              <th style="padding:1rem 1.25rem; text-align:left; white-space:nowrap;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for facture in factures %}
+            <tr style="border-bottom:1px solid #F1F5F9; transition:background 0.15s;" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background='transparent'">
+              <td style="padding:0.9rem 1.25rem; font-weight:700; color:#1E3A8A; font-family:monospace;">
+                #{{ facture.numero|default:facture.id }}
+              </td>
+              <td style="padding:0.9rem 1.25rem;">
+                <div style="font-weight:600; color:#374151;">{{ facture.reservation.utilisateur.first_name }} {{ facture.reservation.utilisateur.last_name }}</div>
+                <div style="color:#94A3B8; font-size:0.8rem;">{{ facture.reservation.utilisateur.email }}</div>
+              </td>
+              <td style="padding:0.9rem 1.25rem;">
+                {% if facture.statut == 'payee' %}
+                  <span class="badge badge-succes">✅ Payée</span>
+                {% elif facture.statut == 'en_attente' %}
+                  <span class="badge badge-attente">⏳ En attente</span>
+                {% elif facture.statut == 'annulee' %}
+                  <span class="badge badge-erreur">❌ Annulée</span>
+                {% else %}
+                  <span class="badge">{{ facture.statut }}</span>
+                {% endif %}
+              </td>
+              <td style="padding:0.9rem 1.25rem; text-align:right; font-weight:700; color:#1E3A8A;">
+                {{ facture.montant_ttc|floatformat:0 }} FCFA
+              </td>
+              <td style="padding:0.9rem 1.25rem; color:#475569; white-space:nowrap;">
+                {{ facture.date_emission|date:"d/m/Y" }}
+              </td>
+              <td style="padding:0.9rem 1.25rem;">
+                <a href="{% url 'formations:facture_detail' facture.id %}"
+                   style="color:#1E3A8A; font-size:0.82rem; font-weight:600; text-decoration:none; white-space:nowrap;">
+                  👁 Voir la facture
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Total général -->
+    <div style="display:flex; justify-content:flex-end; margin-top:1rem;">
+      <div style="background:#EFF6FF; border-radius:12px; padding:1rem 1.5rem; text-align:right;">
+        <div style="color:#64748B; font-size:0.85rem; margin-bottom:0.25rem;">Total général</div>
+        <div style="font-size:1.5rem; font-weight:900; color:#1E3A8A;">
+          {{ total_ttc|floatformat:0|default:"—" }} FCFA
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <div class="carte" style="text-align:center; padding:4rem 2rem;">
+      <div style="font-size:4rem; margin-bottom:1rem;">🧾</div>
+      <h2 style="color:#1E3A8A; margin-bottom:0.5rem;">Aucune facture émise</h2>
+      <p style="color:#64748B;">Les factures apparaîtront ici dès qu'une réservation sera validée.</p>
+      <a href="{% url 'formations:dg_dashboard' %}" class="btn btn-ambre" style="margin-top:1.5rem;">
+        ← Retour au tableau de bord
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% endblock %}

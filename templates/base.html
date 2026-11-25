@@ -1,0 +1,224 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}{{ APP_NAME }} – Drones Homologués ANAC & Formation au Gabon{% endblock %}</title>
+  <meta name="description" content="BEST AÉROS SERVICE : Vente de drones certifiés ANAC, immatriculation officielle et formation professionnelle au télépilotage à Libreville, Port-Gentil et Nkok, Gabon.">
+  <meta name="keywords" content="drone gabon, formation télépilote libreville, anac gabon, dji gabon, achat drone libreville, best aeros service">
+  <meta name="robots" content="index, follow">
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="BEST AÉROS SERVICE – Drones Homologués & Formation au Gabon">
+  <meta property="og:description" content="N°1 au Gabon pour la vente de drones civils et industriels ANAC, l'immatriculation et la formation professionnelle.">
+  <meta property="og:image" content="{% static 'img/logo.svg' %}">
+  <meta property="og:locale" content="fr_GA">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "EducationalOrganization",
+    "name": "{{ APP_NAME }}",
+    "url": "https://bestaeros.ga",
+    "telephone": "{{ TEL_GABON }}",
+    "email": "{{ EMAIL_CONTACT }}",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Libreville",
+      "addressCountry": "GA"
+    }
+  }
+  </script>
+
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/logo-icon.svg' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/theme-custom.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+<header class="entete-site">
+  <div class="conteneur entete-nav">
+    <a href="{% url 'core:home' %}" class="logo-lien" aria-label="Accueil {{ APP_NAME }}">
+      <img src="{% static 'img/logo.svg' %}" alt="{{ APP_NAME }}" width="220" height="55">
+    </a>
+
+    <nav class="nav-liens" aria-label="Navigation principale">
+      <a href="{% url 'core:home' %}" class="nav-lien {% block nav_home %}{% endblock %}">Accueil</a>
+      <a href="{% url 'core:a_propos' %}" class="nav-lien {% block nav_apropos %}{% endblock %}">À propos</a>
+      <a href="{% url 'catalogue:forfaits' %}" class="nav-lien {% block nav_forfaits %}{% endblock %}">Forfaits</a>
+      <a href="{% url 'catalogue:drones' %}" class="nav-lien {% block nav_drones %}{% endblock %}">Catalogue Drones</a>
+      <a href="{% url 'formations:sessions' %}" class="nav-lien {% block nav_sessions %}{% endblock %}">Sessions Gabon</a>
+      <a href="{% url 'core:contact' %}" class="nav-lien {% block nav_contact %}{% endblock %}">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      {% if user.is_authenticated %}
+        <div style="display:inline-flex; align-items:center; gap:8px;">
+          <!-- Avatar cliquable pour changer la photo -->
+          <div id="header_avatar_box" class="avatar-interactif" style="width:36px; height:36px; border-radius:50%; overflow:hidden; border:2px solid #2563EB; cursor:pointer;" title="Changer votre photo de profil">
+            <img id="header_avatar_img" src="{{ user.get_avatar_url }}" alt="{{ user.first_name }}" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+          <input type="file" id="header_avatar_input" accept="image/*" style="display:none;">
+
+          {% if user.role == 'admin' %}
+            <a href="/admin/" class="btn btn-sm btn-contour-blanc">Admin</a>
+          {% elif user.role == 'dg' %}
+            <a href="{% url 'formations:dg_dashboard' %}" class="btn btn-sm btn-ambre">Espace DG</a>
+          {% else %}
+            <a href="{% url 'formations:client_dashboard' %}" class="btn btn-sm btn-ambre">Mon Espace</a>
+          {% endif %}
+          <a href="{% url 'accounts:logout' %}" class="btn btn-sm btn-contour-blanc" title="Se déconnecter">Sortie</a>
+        </div>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-sm btn-ambre">Connexion</a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-sm btn-contour-blanc">S'inscrire</a>
+      {% endif %}
+
+      <button type="button" class="menu-burger" id="btnToggleMenu" aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Menu Mobile Déroulant -->
+  <div class="menu-mobile" id="menuMobile">
+    <a href="{% url 'core:home' %}" class="menu-mobile-lien">Accueil</a>
+    <a href="{% url 'core:a_propos' %}" class="menu-mobile-lien">À propos de nous</a>
+    <a href="{% url 'catalogue:forfaits' %}" class="menu-mobile-lien">Nos Forfaits</a>
+    <a href="{% url 'catalogue:drones' %}" class="menu-mobile-lien">Drones Homologués ANAC</a>
+    <a href="{% url 'formations:sessions' %}" class="menu-mobile-lien">Sessions de Formation</a>
+    <a href="{% url 'core:contact' %}" class="menu-mobile-lien">Contact à Libreville</a>
+    {% if user.is_authenticated %}
+      <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px solid rgba(255,255,255,0.15);">
+        <p style="color:#D97706; font-size:0.85rem; font-weight:bold; margin-bottom:0.5rem;">Connecté : {{ user.first_name }} {{ user.last_name }}</p>
+        {% if user.role == 'admin' %}<a href="/admin/" class="menu-mobile-lien">Panneau Admin</a>
+        {% elif user.role == 'dg' %}<a href="{% url 'formations:dg_dashboard' %}" class="menu-mobile-lien">Espace DG</a>
+        {% else %}<a href="{% url 'formations:client_dashboard' %}" class="menu-mobile-lien">Mon Espace Client</a>{% endif %}
+        <a href="{% url 'accounts:logout' %}" class="menu-mobile-lien" style="color:#EF4444;">Se déconnecter</a>
+      </div>
+    {% else %}
+      <div style="margin-top:1rem; display:flex; gap:0.5rem;">
+        <a href="{% url 'accounts:login' %}" class="btn btn-ambre btn-bloque">Connexion</a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-contour-blanc btn-bloque">S'inscrire</a>
+      </div>
+    {% endif %}
+  </div>
+</header>
+
+{% if messages %}
+  <div class="conteneur mt-4">
+    {% for msg in messages %}
+      <div class="alerte-flash {{ msg.tags }}">
+        <span>{{ msg }}</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="pied-page">
+  <div class="conteneur">
+    <div class="pied-grille">
+      <div class="pied-col">
+        <img src="{% static 'img/logo.svg' %}" alt="{{ APP_NAME }}" style="height:40px; margin-bottom:1rem;">
+        <p>Leader gabonais pour la vente de drones certifiés, l'immatriculation officielle auprès de l'ANAC Gabon et la formation professionnelle en télépilotage.</p>
+        <p style="margin-top:0.5rem; font-weight:bold; color:#D97706;">
+          📍 {{ VILLE_SIEGE }} &bull; Port-Gentil &bull; Franceville
+        </p>
+      </div>
+
+      <div class="pied-col">
+        <h4>Navigation</h4>
+        <ul>
+          <li style="margin-bottom:0.5rem;"><a href="{% url 'core:home' %}">Accueil</a></li>
+          <li style="margin-bottom:0.5rem;"><a href="{% url 'core:a_propos' %}">À propos</a></li>
+          <li style="margin-bottom:0.5rem;"><a href="{% url 'catalogue:forfaits' %}">Nos forfaits</a></li>
+          <li style="margin-bottom:0.5rem;"><a href="{% url 'catalogue:drones' %}">Catalogue Drones</a></li>
+          <li style="margin-bottom:0.5rem;"><a href="{% url 'formations:sessions' %}">Prochaines sessions</a></li>
+          <li style="margin-bottom:0.5rem;"><a href="{% url 'core:contact' %}">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="pied-col">
+        <h4>Contact Direct Gabon</h4>
+        <p><strong>Téléphone :</strong> {{ TEL_GABON }}</p>
+        <p><strong>WhatsApp :</strong> <a href="https://wa.me/{{ WHATSAPP_GABON }}" target="_blank" rel="noopener" style="color:#10B981; font-weight:bold;">{{ TEL_GABON }}</a></p>
+        <p><strong>Email :</strong> {{ EMAIL_CONTACT }}</p>
+        <p><strong>Siège :</strong> Boulevard Triomphal, Quartier Louis, Libreville</p>
+        <div style="margin-top:0.75rem;">
+          <span class="badge badge-succes">✓ Homologation ANAC Gabon</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pied-bas">
+      <p>&copy; {% now "Y" %} <strong>{{ APP_NAME }}</strong> &bull; Tous droits réservés &bull; République Gabonaise</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+window.afficherToast = function(msg, type) {
+  var t = document.createElement('div');
+  t.className = 'toast-flottant';
+  t.innerHTML = (type === 'succes' ? '✓ ' : 'ℹ ') + msg;
+  document.body.appendChild(t);
+  setTimeout(function() {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(20px)';
+    t.style.transition = 'all 0.3s ease';
+    setTimeout(function() { t.remove(); }, 350);
+  }, 3500);
+};
+
+// Menu burger
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.getElementById('btnToggleMenu');
+  var menu = document.getElementById('menuMobile');
+  if (btn && menu) {
+    btn.addEventListener('click', function() { menu.classList.toggle('ouvert'); });
+  }
+
+  // Upload avatar header interactif
+  var avBox = document.getElementById('header_avatar_box');
+  var avInput = document.getElementById('header_avatar_input');
+  var avImg = document.getElementById('header_avatar_img');
+  if (avBox && avInput) {
+    avBox.addEventListener('click', function() { avInput.click(); });
+    avInput.addEventListener('change', function() {
+      if (!avInput.files || !avInput.files[0]) return;
+      var fd = new FormData();
+      fd.append('photo_profil', avInput.files[0]);
+      fd.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      avBox.style.opacity = '0.5';
+
+      fetch('{% url "accounts:changer_avatar" %}', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        body: fd
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        avBox.style.opacity = '1';
+        if (d.succes) {
+          avImg.src = d.avatar_url + '?t=' + new Date().getTime();
+          window.afficherToast(d.message, 'succes');
+        } else {
+          alert('Erreur : ' + d.message);
+        }
+      })
+      .catch(function() { avBox.style.opacity = '1'; alert('Erreur upload avatar.'); });
+    });
+  }
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

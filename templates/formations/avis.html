@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mes Avis & Suggestions – {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:2.5rem 1rem;">
+  <div class="conteneur" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+    <div>
+      <h1 style="font-size:1.75rem; font-weight:800; margin-bottom:0.25rem;">💬 Avis & Suggestions</h1>
+      <p style="color:rgba(255,255,255,0.75); margin:0;">Partagez votre retour d'expérience avec l'équipe {{ APP_NAME }}</p>
+    </div>
+    <a href="{% url 'formations:client_dashboard' %}" class="btn btn-contour-blanc">← Mon Espace</a>
+  </div>
+</section>
+
+<div class="conteneur py-8" style="max-width:760px;">
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="alerte-flash {{ msg.tags }} mb-4">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="carte mb-4" style="padding:1.75rem;">
+    <h2 style="font-size:1.15rem; color:#1E3A8A; margin-bottom:1rem;">Laisser un avis</h2>
+    <form method="post">
+      {% csrf_token %}
+      <div class="champ mb-4">
+        <label for="id_message" style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+          Votre message
+        </label>
+        <textarea name="message" id="id_message" rows="4" class="input" placeholder="Votre retour sur nos formations, nos drones ou notre accompagnement ANAC..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-ambre">Envoyer mon avis</button>
+    </form>
+  </div>
+
+  <div class="carte" style="padding:1.75rem;">
+    <h2 style="font-size:1.15rem; color:#1E3A8A; margin-bottom:1rem;">Historique de mes avis ({{ mes_avis|length }})</h2>
+    {% if mes_avis %}
+      <div style="display:flex; flex-direction:column; gap:0.85rem;">
+        {% for avis in mes_avis %}
+          <div style="padding:1rem; background:#F8FAFC; border-radius:10px; border-left:3px solid #1E3A8A;">
+            <p style="margin:0 0 0.4rem; color:#1E293B; line-height:1.5;">{{ avis.message }}</p>
+            <span style="font-size:0.8rem; color:#64748B;">Publié le {{ avis.date_creation|date:"d/m/Y à H:i" }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color:#64748B; margin:0;">Vous n'avez pas encore publié d'avis.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

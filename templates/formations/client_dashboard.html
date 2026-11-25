@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mon Espace Client – {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+
+<!-- ═══ EN-TÊTE PROFIL ═══ -->
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:3rem 1rem 5rem;">
+  <div class="conteneur" style="display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+    <img src="{{ user.get_avatar_url }}" alt="{{ user.first_name }}"
+         style="width:72px; height:72px; border-radius:50%; border:3px solid #D97706; object-fit:cover; flex-shrink:0;">
+    <div>
+      <p style="color:rgba(255,255,255,0.7); font-size:0.9rem; margin-bottom:0.2rem;">Bonjour 👋</p>
+      <h1 style="font-size:1.5rem; font-weight:800; margin-bottom:0.4rem;">{{ user.first_name }} {{ user.last_name }}</h1>
+      <span class="badge" style="background:rgba(217,119,6,0.25); color:#D97706; border:1px solid #D97706;">
+        🧑‍✈️ Client Télépilote
+      </span>
+    </div>
+    <div style="margin-left:auto;">
+      <a href="{% url 'accounts:profile' %}" class="btn btn-contour-blanc" style="font-size:0.85rem;">✏️ Mon profil</a>
+    </div>
+  </div>
+</section>
+
+<div class="conteneur" style="margin-top:-3rem; padding-bottom:3rem;">
+  <div class="grille-2" style="gap:2rem; align-items:flex-start;">
+
+    <!-- Colonne principale -->
+    <div style="grid-column: span 2 / span 2; display:contents;">
+
+    <!-- Notifications -->
+    {% if notifications %}
+    <div class="carte" style="padding:1.75rem; margin-bottom:0; grid-column:span 2;">
+      <h2 style="color:#1E3A8A; font-weight:700; font-size:1.1rem; margin-bottom:1rem;">
+        🔔 Notifications <span style="font-size:0.8rem; color:#EF4444; font-weight:600;">({{ notifications|length }} non lue{% if notifications|length > 1 %}s{% endif %})</span>
+      </h2>
+      <div style="display:flex; flex-direction:column; gap:0.65rem;">
+        {% for notif in notifications|slice:":5" %}
+        <div style="display:flex; gap:0.75rem; align-items:flex-start; padding:0.75rem; background:#F8FAFC; border-radius:8px; border-left:3px solid #D97706;">
+          <span style="font-size:1.1rem;">📌</span>
+          <div style="flex:1;">
+            <p style="margin:0; color:#374151; font-size:0.9rem;">{{ notif.message }}</p>
+            <span style="color:#94A3B8; font-size:0.78rem;">{{ notif.date_creation|date:"d/m/Y H:i" }}</span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    </div>
+  </div>
+
+  <!-- Réservations -->
+  <div class="carte" style="padding:1.75rem; margin-top:1.5rem;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; flex-wrap:wrap; gap:0.75rem;">
+      <h2 style="color:#1E3A8A; font-weight:700; font-size:1.1rem; margin:0;">📋 Mes Réservations</h2>
+      <a href="{% url 'formations:reserver' %}" class="btn btn-ambre" style="font-size:0.85rem; padding:0.4rem 1rem;">
+        + Nouvelle réservation
+      </a>
+    </div>
+
+    {% if messages %}
+      {% for msg in messages %}
+        <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if reservations %}
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.88rem;">
+        <thead>
+          <tr style="background:#EFF6FF; color:#1E3A8A;">
+            <th style="padding:0.75rem 1rem; text-align:left; border-radius:8px 0 0 8px; white-space:nowrap;">Forfait</th>
+            <th style="padding:0.75rem 1rem; text-align:left; white-space:nowrap;">Session</th>
+            <th style="padding:0.75rem 1rem; text-align:left; white-space:nowrap;">Drone</th>
+            <th style="padding:0.75rem 1rem; text-align:left; white-space:nowrap;">Statut</th>
+            <th style="padding:0.75rem 1rem; text-align:left; white-space:nowrap;">Paiement</th>
+            <th style="padding:0.75rem 1rem; text-align:left; border-radius:0 8px 8px 0; white-space:nowrap;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for resa in reservations %}
+          <tr style="border-bottom:1px solid #F1F5F9;">
+            <td style="padding:0.9rem 1rem; font-weight:600; color:#1E3A8A;">
+              {{ resa.forfait.nom }}
+            </td>
+            <td style="padding:0.9rem 1rem; color:#475569;">
+              {% if resa.session %}
+                {{ resa.session.lieu.nom }}, {{ resa.session.lieu.ville }}<br>
+                <span style="font-size:0.8rem; color:#94A3B8;">
+                  {{ resa.session.date_debut|date:"d/m/Y" }} – {{ resa.session.date_fin|date:"d/m/Y" }}
+                </span>
+              {% else %}
+                <span style="color:#94A3B8; font-size:0.85rem;">À planifier</span>
+              {% endif %}
+            </td>
+            <td style="padding:0.9rem 1rem; color:#475569;">
+              {% if resa.drone %}{{ resa.drone.nom }}{% else %}<span style="color:#94A3B8;">—</span>{% endif %}
+            </td>
+            <td style="padding:0.9rem 1rem;">
+              {% if resa.statut == 'confirmee' %}
+                <span class="badge badge-succes">✅ Confirmée</span>
+              {% elif resa.statut == 'en_attente' %}
+                <span class="badge badge-attente">⏳ En attente</span>
+              {% elif resa.statut == 'refusee' %}
+                <span class="badge badge-erreur">❌ Refusée</span>
+              {% elif resa.statut == 'annulee' %}
+                <span class="badge badge-erreur">❌ Annulée</span>
+              {% else %}
+                <span class="badge">{{ resa.get_statut_display }}</span>
+              {% endif %}
+            </td>
+            <td style="padding:0.9rem 1rem;">
+              {% if resa.paye or resa.facture and resa.facture.statut == 'payee' %}
+                <span style="color:#10B981; font-weight:600; font-size:0.85rem;">✅ Payé</span>
+              {% else %}
+                <span style="color:#D97706; font-weight:600; font-size:0.85rem;">⏳ En attente</span>
+              {% endif %}
+            </td>
+            <td style="padding:0.9rem 1rem;">
+              {% if resa.facture %}
+                <a href="{% url 'formations:facture_detail' resa.facture.id %}"
+                   style="color:#1E3A8A; font-size:0.82rem; font-weight:600; text-decoration:none;">
+                  🧾 Voir facture
+                </a>
+              {% else %}
+                <span style="color:#94A3B8; font-size:0.82rem;">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% else %}
+    <!-- Aucune réservation -->
+    <div style="text-align:center; padding:3rem 1rem;">
+      <div style="font-size:3.5rem; margin-bottom:1rem;">📭</div>
+      <h3 style="color:#1E3A8A; margin-bottom:0.5rem;">Aucune réservation pour l'instant</h3>
+      <p style="color:#64748B; margin-bottom:1.5rem;">Commencez votre parcours de télépilote certifié ANAC Gabon dès aujourd'hui !</p>
+      <a href="{% url 'formations:reserver' %}" class="btn btn-ambre">📝 Réserver ma première formation</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Liens rapides -->
+  <div class="grille-3 mt-4" style="gap:1rem;">
+    <a href="{% url 'catalogue:drones' %}" style="text-decoration:none;">
+      <div class="carte" style="padding:1.25rem; text-align:center; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">🚁</div>
+        <div style="font-weight:700; color:#1E3A8A; font-size:0.9rem;">Catalogue Drones</div>
+      </div>
+    </a>
+    <a href="{% url 'catalogue:forfaits' %}" style="text-decoration:none;">
+      <div class="carte" style="padding:1.25rem; text-align:center; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">📋</div>
+        <div style="font-weight:700; color:#1E3A8A; font-size:0.9rem;">Nos Forfaits</div>
+      </div>
+    </a>
+    <a href="{% url 'formations:avis' %}" style="text-decoration:none;">
+      <div class="carte" style="padding:1.25rem; text-align:center; transition:transform 0.2s;" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:1.75rem; margin-bottom:0.5rem;">💬</div>
+        <div style="font-weight:700; color:#1E3A8A; font-size:0.9rem;">Laisser un Avis</div>
+      </div>
+    </a>
+  </div>
+
+</div>
+{% endblock %}

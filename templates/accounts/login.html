@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Connexion – {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<section style="min-height:70vh; display:flex; align-items:center; justify-content:center; padding:3rem 1rem; background:#F8FAFC;">
+  <div style="width:100%; max-width:440px;">
+
+    <!-- Logo -->
+    <div style="text-align:center; margin-bottom:1.75rem;">
+      <a href="{% url 'core:home' %}">
+        <img src="{% static 'img/logo.svg' %}" alt="{{ APP_NAME }}" style="height:52px;">
+      </a>
+    </div>
+
+    <div class="carte" style="padding:2rem; border-radius:16px;">
+      <div style="text-align:center; margin-bottom:1.75rem;">
+        <h1 style="font-size:1.5rem; font-weight:800; color:#1E3A8A; margin-bottom:0.4rem;">
+          Connexion à votre espace
+        </h1>
+        <p style="color:#64748B; font-size:0.9rem;">
+          Accédez à votre tableau de bord BEST AÉROS SERVICE
+        </p>
+      </div>
+
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" action="{% url 'accounts:login' %}" novalidate>
+        {% csrf_token %}
+
+        <div class="champ mb-4">
+          <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+            Adresse email
+          </label>
+          <input type="email" name="email" class="input" placeholder="votre@email.com"
+                 value="{{ request.POST.email|default:'' }}" required autocomplete="email" autofocus>
+        </div>
+
+        <div class="champ mb-4">
+          <label style="display:flex; justify-content:space-between; align-items:center; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+            <span>Mot de passe</span>
+            <a href="{% url 'accounts:password_reset' %}" style="font-size:0.82rem; color:#D97706; font-weight:500; text-decoration:none;">
+              Mot de passe oublié ?
+            </a>
+          </label>
+          <input type="password" name="password" class="input" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn btn-ambre btn-bloque" style="font-size:1rem; padding:0.85rem; margin-top:0.5rem;">
+          🔑 Se connecter
+        </button>
+      </form>
+
+      <div style="text-align:center; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #E2E8F0;">
+        <p style="color:#64748B; font-size:0.9rem;">
+          Pas encore de compte ?
+          <a href="{% url 'accounts:register' %}" style="color:#1E3A8A; font-weight:700; text-decoration:none;">
+            Créer mon compte →
+          </a>
+        </p>
+      </div>
+    </div>
+
+    <p style="text-align:center; margin-top:1.25rem; font-size:0.8rem; color:#94A3B8;">
+      En vous connectant, vous acceptez nos conditions d'utilisation conformément à la réglementation gabonaise.
+    </p>
+  </div>
+</section>
+{% endblock %}

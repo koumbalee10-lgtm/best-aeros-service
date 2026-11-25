@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Facture #{{ facture.numero|default:facture.id }} – {{ APP_NAME }}{% endblock %}
+
+{% block extra_head %}
+<style>
+  @media print {
+    header, footer, .nav-actions, .btn-impression, .pied-page, .entete-site { display:none !important; }
+    body { background:#fff !important; }
+    .facture-wrapper { box-shadow:none !important; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section style="background:#F8FAFC; padding:2rem 1rem; min-height:70vh;">
+  <div class="conteneur" style="max-width:860px; margin:0 auto;">
+
+    <!-- Actions -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:0.75rem;">
+      <a href="javascript:history.back()" style="color:#1E3A8A; text-decoration:none; font-size:0.9rem;">← Retour</a>
+      <button onclick="window.print()" class="btn btn-ambre btn-impression" style="font-size:0.9rem;">
+        🖨️ Imprimer la facture
+      </button>
+    </div>
+
+    <!-- Facture -->
+    <div class="facture-wrapper" style="background:#fff; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.08); overflow:hidden;">
+
+      <!-- En-tête facture -->
+      <div style="background:linear-gradient(135deg,#1E3A8A,#0F172A); color:#fff; padding:2rem 2.5rem; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1.5rem;">
+        <div>
+          <img src="{% static 'img/logo.svg' %}" alt="{{ APP_NAME }}" style="height:40px; margin-bottom:0.75rem; filter:brightness(10);">
+          <p style="color:rgba(255,255,255,0.75); font-size:0.85rem; margin:0; line-height:1.5;">
+            Boulevard Triomphal, Quartier Louis<br>
+            Libreville, République Gabonaise<br>
+            {{ TEL_GABON }} · {{ EMAIL_CONTACT }}
+          </p>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:1.5rem; font-weight:900; letter-spacing:0.05em; color:#D97706; margin-bottom:0.5rem;">
+            FACTURE
+          </div>
+          <div style="font-size:1rem; font-weight:700;">N° {{ facture.numero|default:facture.id }}</div>
+          <div style="color:rgba(255,255,255,0.75); font-size:0.82rem; margin-top:0.4rem;">
+            Émise le : {{ facture.date_emission|date:"d/m/Y" }}<br>
+            Échéance : {{ facture.date_echeance|date:"d/m/Y"|default:"—" }}
+          </div>
+          <div style="margin-top:0.75rem;">
+            {% if facture.statut == 'payee' %}
+              <span class="badge badge-succes">✅ PAYÉE</span>
+            {% elif facture.statut == 'en_attente' %}
+              <span class="badge badge-attente">⏳ EN ATTENTE</span>
+            {% elif facture.statut == 'annulee' %}
+              <span class="badge badge-erreur">❌ ANNULÉE</span>
+            {% else %}
+              <span class="badge">{{ facture.statut|upper }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Infos client -->
+      <div style="padding:2rem 2.5rem; background:#F8FAFC; border-bottom:1px solid #E2E8F0;">
+        <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; color:#94A3B8; font-weight:700; margin-bottom:0.75rem;">
+          Facturé à
+        </div>
+        <div style="font-size:1rem; font-weight:700; color:#1E3A8A; margin-bottom:0.25rem;">
+          {{ facture.reservation.utilisateur.first_name }} {{ facture.reservation.utilisateur.last_name }}
+        </div>
+        <div style="color:#475569; font-size:0.9rem; line-height:1.6;">
+          {{ facture.reservation.utilisateur.email }}<br>
+          {% if facture.reservation.utilisateur.telephone %}{{ facture.reservation.utilisateur.telephone }}{% endif %}
+        </div>
+      </div>
+
+      <!-- Lignes de facture -->
+      <div style="padding:2rem 2.5rem;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.88rem; margin-bottom:1.5rem;">
+          <thead>
+            <tr style="background:#EFF6FF; color:#1E3A8A;">
+              <th style="padding:0.75rem 1rem; text-align:left; border-radius:8px 0 0 8px;">Description</th>
+              <th style="padding:0.75rem 1rem; text-align:center; white-space:nowrap;">Qté</th>
+              <th style="padding:0.75rem 1rem; text-align:right; white-space:nowrap;">Prix unitaire</th>
+              <th style="padding:0.75rem 1rem; text-align:right; border-radius:0 8px 8px 0; white-space:nowrap;">Total HT</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if facture.lignes.all %}
+              {% for ligne in facture.lignes.all %}
+              <tr style="border-bottom:1px solid #F1F5F9;">
+                <td style="padding:0.9rem 1rem; color:#374151;">{{ ligne.description }}</td>
+                <td style="padding:0.9rem 1rem; text-align:center; color:#475569;">{{ ligne.quantite }}</td>
+                <td style="padding:0.9rem 1rem; text-align:right; color:#475569;">{{ ligne.prix_unitaire|floatformat:0 }} FCFA</td>
+                <td style="padding:0.9rem 1rem; text-align:right; font-weight:600; color:#1E3A8A;">{{ ligne.total|floatformat:0 }} FCFA</td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <!-- Ligne par défaut : forfait -->
+              <tr style="border-bottom:1px solid #F1F5F9;">
+                <td style="padding:0.9rem 1rem; color:#374151;">
+                  Formation : {{ facture.reservation.forfait.nom }}<br>
+                  {% if facture.reservation.session %}
+                  <small style="color:#94A3B8;">Session {{ facture.reservation.session.lieu.nom }} – {{ facture.reservation.session.date_debut|date:"d/m/Y" }}</small>
+                  {% endif %}
+                </td>
+                <td style="padding:0.9rem 1rem; text-align:center; color:#475569;">1</td>
+                <td style="padding:0.9rem 1rem; text-align:right; color:#475569;">{{ facture.reservation.forfait.prix_fcfa|floatformat:0 }} FCFA</td>
+                <td style="padding:0.9rem 1rem; text-align:right; font-weight:600; color:#1E3A8A;">{{ facture.reservation.forfait.prix_fcfa|floatformat:0 }} FCFA</td>
+              </tr>
+              {% if facture.reservation.drone %}
+              <tr style="border-bottom:1px solid #F1F5F9;">
+                <td style="padding:0.9rem 1rem; color:#374151;">Drone : {{ facture.reservation.drone.nom }}</td>
+                <td style="padding:0.9rem 1rem; text-align:center; color:#475569;">1</td>
+                <td style="padding:0.9rem 1rem; text-align:right; color:#475569;">{{ facture.reservation.drone.prix_fcfa|floatformat:0 }} FCFA</td>
+                <td style="padding:0.9rem 1rem; text-align:right; font-weight:600; color:#1E3A8A;">{{ facture.reservation.drone.prix_fcfa|floatformat:0 }} FCFA</td>
+              </tr>
+              {% endif %}
+            {% endif %}
+          </tbody>
+        </table>
+
+        <!-- Totaux -->
+        <div style="display:flex; justify-content:flex-end;">
+          <div style="min-width:280px;">
+            <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #E2E8F0; color:#475569; font-size:0.9rem;">
+              <span>Sous-total HT</span>
+              <span>{{ facture.montant_ht|floatformat:0|default:facture.montant_ttc|floatformat:0 }} FCFA</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid #E2E8F0; color:#475569; font-size:0.9rem;">
+              <span>TVA ({{ facture.tva_pct|default:"18" }}%)</span>
+              <span>{{ facture.montant_tva|floatformat:0|default:"0" }} FCFA</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:1rem 0; background:#EFF6FF; border-radius:8px; padding:0.85rem 1rem; margin-top:0.75rem;">
+              <span style="font-size:1.1rem; font-weight:800; color:#1E3A8A;">TOTAL TTC</span>
+              <span style="font-size:1.3rem; font-weight:900; color:#1E3A8A;">{{ facture.montant_ttc|floatformat:0 }} FCFA</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Note de bas de facture -->
+        <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px dashed #E2E8F0; color:#94A3B8; font-size:0.8rem; text-align:center; line-height:1.6;">
+          BEST AÉROS SERVICE · République Gabonaise · Agrément ANAC Gabon<br>
+          Pour toute question : {{ TEL_GABON }} · {{ EMAIL_CONTACT }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mon Profil – {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<section style="background:linear-gradient(135deg,#0F172A,#1E3A8A); color:#fff; padding:3rem 1rem 5rem;">
+  <div class="conteneur" style="text-align:center;">
+    <!-- Avatar -->
+    <div style="position:relative; display:inline-block; margin-bottom:1rem;">
+      <img src="{{ user.get_avatar_url }}" alt="{{ user.first_name }}"
+           style="width:100px; height:100px; border-radius:50%; border:4px solid #D97706; object-fit:cover;">
+      <label for="photo_profil_btn" title="Changer la photo"
+             style="position:absolute; bottom:2px; right:2px; background:#D97706; color:#fff; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.85rem; border:2px solid #fff;">
+        📷
+      </label>
+    </div>
+    <h1 style="font-size:1.6rem; font-weight:800; margin-bottom:0.25rem;">{{ user.first_name }} {{ user.last_name }}</h1>
+    <span class="badge" style="background:rgba(217,119,6,0.25); color:#D97706; border:1px solid #D97706;">
+      {% if user.role == 'dg' %}Direction Générale{% elif user.role == 'admin' %}Administrateur{% else %}Client Télépilote{% endif %}
+    </span>
+  </div>
+</section>
+
+<div class="conteneur" style="margin-top:-3rem; padding-bottom:3rem;">
+  <div class="grille-2" style="gap:2rem; align-items:flex-start;">
+
+    <!-- Formulaire modification -->
+    <div class="carte" style="padding:2rem;">
+      <h2 style="color:#1E3A8A; font-weight:700; font-size:1.2rem; margin-bottom:1.5rem;">✏️ Modifier mes informations</h2>
+
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" action="{% url 'accounts:profile' %}" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <div class="grille-2" style="gap:1rem;">
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Prénom</label>
+            <input type="text" name="prenom" class="input" value="{{ user.first_name }}" required>
+          </div>
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Nom</label>
+            <input type="text" name="nom" class="input" value="{{ user.last_name }}" required>
+          </div>
+        </div>
+
+        <div class="champ mt-4">
+          <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Email</label>
+          <input type="email" class="input" value="{{ user.email }}" disabled style="opacity:0.65; cursor:not-allowed;">
+          <small style="color:#94A3B8; font-size:0.8rem;">L'email ne peut pas être modifié ici.</small>
+        </div>
+
+        <div class="grille-2 mt-4" style="gap:1rem;">
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Téléphone</label>
+            <input type="tel" name="telephone" class="input" value="{{ user.telephone|default:'' }}" placeholder="+241 07 XX XX XX">
+          </div>
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">WhatsApp</label>
+            <input type="tel" name="whatsapp" class="input" value="{{ user.whatsapp|default:'' }}" placeholder="+241 07 XX XX XX">
+          </div>
+        </div>
+
+        <div class="champ mt-4">
+          <label for="photo_profil_btn" style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+            📷 Changer la photo de profil
+          </label>
+          <input type="file" id="photo_profil_btn" name="photo_profil" accept="image/*" class="input" style="padding:0.4rem;">
+          <small style="color:#94A3B8; font-size:0.8rem;">JPG, PNG ou WEBP – max 2 Mo</small>
+        </div>
+
+        <button type="submit" class="btn btn-ambre btn-bloque" style="margin-top:1.5rem;">
+          💾 Enregistrer les modifications
+        </button>
+      </form>
+    </div>
+
+    <!-- Sécurité & Liens rapides -->
+    <div>
+      <div class="carte" style="padding:2rem; margin-bottom:1.5rem;">
+        <h2 style="color:#1E3A8A; font-weight:700; font-size:1.2rem; margin-bottom:1.25rem;">🔒 Sécurité du compte</h2>
+        <p style="color:#475569; font-size:0.9rem; margin-bottom:1.25rem; line-height:1.6;">
+          Protégez votre espace BEST AÉROS SERVICE en choisissant un mot de passe robuste et unique.
+        </p>
+        <a href="{% url 'accounts:password_change' %}" class="btn btn-contour-blanc" style="color:#1E3A8A; border-color:#1E3A8A;">
+          🔑 Changer de mot de passe
+        </a>
+      </div>
+
+      <div class="carte" style="padding:2rem;">
+        <h2 style="color:#1E3A8A; font-weight:700; font-size:1.2rem; margin-bottom:1.25rem;">🚀 Accès rapide</h2>
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          {% if user.role == 'dg' %}
+            <a href="{% url 'formations:dg_dashboard' %}" class="btn btn-ambre" style="text-align:center;">
+              📊 Espace Direction Générale
+            </a>
+          {% elif user.role == 'admin' %}
+            <a href="/admin/" class="btn btn-ambre" style="text-align:center;">
+              ⚙️ Panneau d'administration
+            </a>
+          {% else %}
+            <a href="{% url 'formations:client_dashboard' %}" class="btn btn-ambre" style="text-align:center;">
+              📋 Mon espace client
+            </a>
+          {% endif %}
+          <a href="{% url 'catalogue:drones' %}" class="btn btn-contour-blanc" style="color:#1E3A8A; border-color:#1E3A8A; text-align:center;">
+            🚁 Catalogue drones
+          </a>
+          <a href="{% url 'catalogue:forfaits' %}" class="btn btn-contour-blanc" style="color:#1E3A8A; border-color:#1E3A8A; text-align:center;">
+            📋 Nos forfaits
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

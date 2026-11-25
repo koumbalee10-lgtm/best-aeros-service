@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Créer un compte – {{ APP_NAME }}{% endblock %}
+
+{% block content %}
+<section style="min-height:70vh; display:flex; align-items:center; justify-content:center; padding:3rem 1rem; background:#F8FAFC;">
+  <div style="width:100%; max-width:500px;">
+
+    <!-- Logo -->
+    <div style="text-align:center; margin-bottom:1.75rem;">
+      <a href="{% url 'core:home' %}">
+        <img src="{% static 'img/logo.svg' %}" alt="{{ APP_NAME }}" style="height:52px;">
+      </a>
+    </div>
+
+    <div class="carte" style="padding:2rem; border-radius:16px;">
+      <div style="text-align:center; margin-bottom:1.75rem;">
+        <h1 style="font-size:1.5rem; font-weight:800; color:#1E3A8A; margin-bottom:0.4rem;">
+          Créer votre compte
+        </h1>
+        <p style="color:#64748B; font-size:0.9rem;">
+          Rejoignez <strong>+150 télépilotes</strong> formés au Gabon 🇬🇦
+        </p>
+      </div>
+
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alerte-flash {{ msg.tags }}" style="margin-bottom:1rem;">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" action="{% url 'accounts:register' %}" novalidate>
+        {% csrf_token %}
+
+        <div class="grille-2" style="gap:1rem;">
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+              Prénom <span style="color:#EF4444;">*</span>
+            </label>
+            <input type="text" name="prenom" class="input" placeholder="Jean-Baptiste"
+                   value="{{ request.POST.prenom|default:'' }}" required maxlength="80">
+          </div>
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+              Nom <span style="color:#EF4444;">*</span>
+            </label>
+            <input type="text" name="nom" class="input" placeholder="Obiang"
+                   value="{{ request.POST.nom|default:'' }}" required maxlength="80">
+          </div>
+        </div>
+
+        <div class="champ mt-4">
+          <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+            Adresse email <span style="color:#EF4444;">*</span>
+          </label>
+          <input type="email" name="email" class="input" placeholder="votre@email.com"
+                 value="{{ request.POST.email|default:'' }}" required autocomplete="email">
+        </div>
+
+        <div class="grille-2 mt-4" style="gap:1rem;">
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">Téléphone</label>
+            <input type="tel" name="telephone" class="input" placeholder="+241 07 XX XX XX"
+                   value="{{ request.POST.telephone|default:'' }}">
+          </div>
+          <div class="champ">
+            <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">WhatsApp</label>
+            <input type="tel" name="whatsapp" class="input" placeholder="+241 07 XX XX XX"
+                   value="{{ request.POST.whatsapp|default:'' }}">
+          </div>
+        </div>
+
+        <div class="champ mt-4">
+          <label style="display:block; font-weight:600; color:#374151; margin-bottom:0.4rem;">
+            Mot de passe <span style="color:#EF4444;">*</span>
+          </label>
+          <input type="password" name="password" class="input" placeholder="Minimum 6 caractères"
+                 required minlength="6" autocomplete="new-password">
+          <small style="color:#94A3B8; font-size:0.8rem; margin-top:0.25rem; display:block;">Au moins 6 caractères</small>
+        </div>
+
+        <!-- Note légale ANAC -->
+        <div style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:8px; padding:0.85rem; margin-top:1.25rem; font-size:0.82rem; color:#92400E; line-height:1.5;">
+          ⚠️ <strong>Note légale ANAC Gabon :</strong> En créant votre compte, vous reconnaissez que toute activité de télépilotage doit être effectuée conformément à la réglementation de l'Aviation Civile gabonaise (ANAC). Un certificat de télépilote est obligatoire pour opérer commercialement.
+        </div>
+
+        <button type="submit" class="btn btn-ambre btn-bloque" style="font-size:1rem; padding:0.85rem; margin-top:1.5rem;">
+          ✅ Créer mon compte
+        </button>
+      </form>
+
+      <div style="text-align:center; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid #E2E8F0;">
+        <p style="color:#64748B; font-size:0.9rem;">
+          Déjà un compte ?
+          <a href="{% url 'accounts:login' %}" style="color:#1E3A8A; font-weight:700; text-decoration:none;">
+            Se connecter →
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
