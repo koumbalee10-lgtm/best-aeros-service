@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: best-aeros-service
+    env: python
+    region: frankfurt
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn best_aeros.wsgi:application --workers 2 --timeout 120 --keep-alive 5"
+    # Health check natif Render — vérifie que le serveur répond toutes les 5 min
+    healthCheckPath: /health/
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,.bestaeros.ga,bestaeros.ga,localhost,127.0.0.1"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: best-aeros-db
+          property: connectionString
+
+databases:
+  - name: best-aeros-db
+    region: frankfurt
+    plan: free
+    databaseName: best_aeros
+    user: bestaeros_user
